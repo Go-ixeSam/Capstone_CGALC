@@ -63,7 +63,7 @@ function Maps({ ...prop }) {
   //...prop cho ta biét sẽ có nhiều tham số đc thêm vào, và ta ko cần phải mất công đặt tên từng cái
   return (
     <CustomMap
-      googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo421sSPdh65qh2f0B08C2U4eU5-pGg4c&v=3.exp&libraries=geometry,drawing,places"
+      // googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo421sSPdh65qh2f0B08C2U4eU5-pGg4c&v=3.exp&libraries=geometry,drawing,places"
       loadingElement={<div style={{ height: `100%` }} />}
       containerElement={<div style={{ height: `100vh` }} />}
       mapElement={<div style={{ height: `100%` }} />}
