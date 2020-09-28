@@ -76,13 +76,13 @@ const dashboardRoutes = [
     component: Icons,
     layout: "/admin"
   },
-  // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   icon: "pe-7s-map-marker",
-  //   component: Maps,
-  //   layout: "/admin"
-  // },
+  {
+    path: "/maps",
+    name: "Maps Aha",
+    icon: "pe-7s-map-marker",
+    component: Maps,
+    layout: "/admin"
+  },
   // {
   //   path: "/notifications",
   //   name: "Notifications",
