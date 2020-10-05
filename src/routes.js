@@ -25,72 +25,144 @@ import Notifications from "./views/Notifications.jsx";
 import Upgrade from "./views/Upgrade.jsx";
 import Order from "./views/Order.jsx";
 import Schedule from "./views/Schedule.jsx";
+import trip from "./assets/img/trip.png";
 
+var number = 1; //Dùng cách này để kiểm tra role của user, vì chỗ này như 1 cái biến thôi nên ta sẽ ko tạo 1 component ở đây. Thay đổi
+// cách để khi đăng nhập vào sẽ mở chức năng tương tự
 const dashboardRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "pe-7s-graph",
-    component: Dashboard,
-    layout: "/admin"
-  },
-  {
-    path: "/user",
-    name: "Add user",
-    icon: "pe-7s-user",
-    component: UserProfile,
-    layout: "/admin"
-  },
-  {
-    path: "/table",
-    name: "User List",
-    icon: "pe-7s-note2",
-    component: TableList,
-    layout: "/admin"
-  },
-  {
-    path: "/order",
-    name: "Order",
-    icon: "pe-7s-shopbag",
-    component: Order,
-    layout: "/admin"
-  },
-  {
-    path: "/schedule",
-    name: "Schedule",
-    icon: "pe-7s-date",
-    component: Schedule,
-    layout: "/admin"
-  },
-  // {
-  //   path: "/typography",
-  //   name: "Typography",
-  //   icon: "pe-7s-news-paper",
-  //   component: Typography,
-  //   layout: "/admin"
-  // },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "pe-7s-science",
-    component: Icons,
-    layout: "/admin"
-  },
-  {
-    path: "/maps",
-    name: "Maps Aha",
-    icon: "pe-7s-map-marker",
-    component: Maps,
-    layout: "/admin"
-  },
-  // {
-  //   path: "/notifications",
-  //   name: "Notifications",
-  //   icon: "pe-7s-bell",
-  //   component: Notifications,
-  //   layout: "/admin"
-  // },
- 
-];
+      {
+        path: "/dashboard",
+        name: "Dashboard",
+        icon: "pe-7s-graph",
+        component: Dashboard,
+        layout: "/admin",
+      },
+      {
+        // Từ bây h add user sẽ là add trip
+        path: "/user",
+        name: "Create trip",
+        icon: trip,
+        component: UserProfile,
+        layout: "/admin",
+      },
+      {
+        path: "/table",
+        name: "User List",
+        icon: "pe-7s-note2",
+        component: TableList,
+        layout: "/admin",
+      },
+      // {
+      //   path: "/order",
+      //   name: "Order",
+      //   icon: "pe-7s-shopbag",
+      //   component: Order,
+      //   layout: "/admin"
+      // },
+      // {
+      //   path: "/schedule",
+      //   name: "Schedule",
+      //   icon: "pe-7s-date",
+      //   component: Schedule,
+      //   layout: "/admin"
+      // },
+      // {
+      //   path: "/typography",
+      //   name: "Typography",
+      //   icon: "pe-7s-news-paper",
+      //   component: Typography,
+      //   layout: "/admin"
+      // },
+      {
+        path: "/icons",
+        name: "Icons",
+        icon: "pe-7s-science",
+        component: Icons,
+        layout: "/admin",
+      },
+      {
+        path: "/maps",
+        name: "Maps Aha",
+        icon: "pe-7s-map-marker",
+        component: Maps,
+        layout: "/admin",
+      },
+      {
+        path: "/notifications",
+        name: "Notifications",
+        icon: "pe-7s-bell",
+        component: Notifications,
+        layout: "/admin",
+      },
+    ];
+// {
+//   if (number == 1) {
+//     dashboardRoutes = [
+//       {
+//         path: "/dashboard",
+//         name: "Dashboard",
+//         icon: "pe-7s-graph",
+//         component: Dashboard,
+//         layout: "/admin",
+//       },
+//       {
+//         path: "/user",
+//         name: "Add user",
+//         icon: "pe-7s-user",
+//         component: UserProfile,
+//         layout: "/admin",
+//       },
+//       {
+//         path: "/table",
+//         name: "User List",
+//         icon: "pe-7s-note2",
+//         component: TableList,
+//         layout: "/admin",
+//       },
+//       // {
+//       //   path: "/order",
+//       //   name: "Order",
+//       //   icon: "pe-7s-shopbag",
+//       //   component: Order,
+//       //   layout: "/admin"
+//       // },
+//       // {
+//       //   path: "/schedule",
+//       //   name: "Schedule",
+//       //   icon: "pe-7s-date",
+//       //   component: Schedule,
+//       //   layout: "/admin"
+//       // },
+//       // {
+//       //   path: "/typography",
+//       //   name: "Typography",
+//       //   icon: "pe-7s-news-paper",
+//       //   component: Typography,
+//       //   layout: "/admin"
+//       // },
+//       {
+//         path: "/icons",
+//         name: "Icons",
+//         icon: "pe-7s-science",
+//         component: Icons,
+//         layout: "/admin",
+//       },
+//       {
+//         path: "/maps",
+//         name: "Maps Aha",
+//         icon: "pe-7s-map-marker",
+//         component: Maps,
+//         layout: "/admin",
+//       },
+//       {
+//         path: "/notifications",
+//         name: "Notifications",
+//         icon: "pe-7s-bell",
+//         component: Notifications,
+//         layout: "/admin",
+//       },
+//     ];
+//   }
+// }
 
 export default dashboardRoutes;

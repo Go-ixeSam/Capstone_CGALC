@@ -162,7 +162,7 @@ class Dashboard extends Component {
                 />
               </Col>
 
-              <Col md={6}>
+              {/* <Col md={6}>
                 <Card
                   title="Tasks"
                   category="Backend development"
@@ -176,7 +176,7 @@ class Dashboard extends Component {
                     </div>
                   }
                 />
-              </Col>
+              </Col> */}
             </Row>
           </Grid>
         </div>

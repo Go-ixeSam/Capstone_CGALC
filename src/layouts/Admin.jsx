@@ -38,10 +38,14 @@ class Admin extends Component {
       image: image,
       color: "black",
       hasImage: true,
-      fixedClasses: "dropdown show-dropdown open"
+      fixedClasses: "dropdown show-dropdown open",
     };
   }
-  handleNotificationClick = position => {
+
+  // Event khi ta click vào notification, ở đây ta có lẽ sẽ bắt sự kiên tài xế gửi request thay đổi
+  // đường đi thì ta click vào và chuyển đến trang cần đến
+  handleNotificationClick = (position) => {
+    //Nguyên cái đống case ở dưới nhằm để demo thôithôi
     var color = Math.floor(Math.random() * 4 + 1);
     var level;
     switch (color) {
@@ -70,30 +74,55 @@ class Admin extends Component {
       ),
       level: level,
       position: position,
-      autoDismiss: 15
+      autoDismiss: 15,
     });
   };
-  getRoutes = routes => {
+  // Hàm này sẽ xử lí việc nhấp vào cái item ở nav bar và đưa ta đến trang cần tìm
+  getRoutes = (routes) => {
+    var role = 1;
+    var route = <Route></Route>;
     return routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            render={props => (
-              <prop.component
-                {...props}
-                handleClick={this.handleNotificationClick}
-              />
-            )}
-            key={key}
-          />
-        );
+      // Nếu đây là admin layout thì mới thực hiện route
+      if (prop.layout == "/admin") {
+        if (role == 1) {
+          // return (
+          route = (
+            <Route
+              path={prop.layout + prop.path}
+              //path: Tên đường dẫn
+              render={(props) => (
+                <prop.component
+                  {...props}
+                  handleClick={this.handleNotificationClick}
+                />
+              )}
+              key={key}
+            />
+          );
+          // );
+        }else{
+          route=<div>HalloHallo</div>
+        }
+        return route;
+        // return (
+        //   <Route
+        //     path={prop.layout + prop.path}
+        //     //path: Tên đường dẫn
+        //     render={props => (
+        //       <prop.component
+        //         {...props}
+        //         handleClick={this.handleNotificationClick}
+        //       />
+        //     )}
+        //     key={key}
+        //   />
+        // );
       } else {
         return null;
       }
     });
   };
-  getBrandText = path => {
+  getBrandText = (path) => {
     for (let i = 0; i < routes.length; i++) {
       if (
         this.props.location.pathname.indexOf(
@@ -105,13 +134,13 @@ class Admin extends Component {
     }
     return "Brand";
   };
-  handleImageClick = image => {
+  handleImageClick = (image) => {
     this.setState({ image: image });
   };
-  handleColorClick = color => {
+  handleColorClick = (color) => {
     this.setState({ color: color });
   };
-  handleHasImage = hasImage => {
+  handleHasImage = (hasImage) => {
     this.setState({ hasImage: hasImage });
   };
   handleFixedClick = () => {
@@ -122,6 +151,7 @@ class Admin extends Component {
     }
   };
   componentDidMount() {
+    // Khai báo 1 notification system ở đây
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
     var color = Math.floor(Math.random() * 4 + 1);
@@ -142,18 +172,20 @@ class Admin extends Component {
       default:
         break;
     }
-    // _notificationSystem.addNotification({
-    //   title: <span data-notify="icon" className="pe-7s-gift" />,
-    //   message: (
-    //     <div>
-    //       Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-    //       every web developer.
-    //     </div>
-    //   ),
-    //   level: level,
-    //   position: "tr",
-    //   autoDismiss: 15
-    // });
+
+    // Cách để bắn notification ở đây
+    _notificationSystem.addNotification({
+      title: <span data-notify="icon" className="pe-7s-gift" />,
+      message: (
+        <div>
+          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
+          every web developer.
+        </div>
+      ),
+      level: level,
+      position: "tr",
+      autoDismiss: 15,
+    });
   }
   componentDidUpdate(e) {
     if (
@@ -173,15 +205,20 @@ class Admin extends Component {
     return (
       <div className="wrapper">
         <NotificationSystem ref="notificationSystem" style={style} />
-        <Sidebar {...this.props} routes={routes} image={this.state.image}
-        color={this.state.color}
-        hasImage={this.state.hasImage}/>
+        <Sidebar
+          {...this.props}
+          routes={routes}
+          image={this.state.image}
+          color={this.state.color}
+          hasImage={this.state.hasImage}
+        />
         <div id="main-panel" className="main-panel" ref="mainPanel">
           <AdminNavbar
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
           />
           <Switch>{this.getRoutes(routes)}</Switch>
+          {/* Switch đây là chỗ sẽ đưa ta đến page cần đến dựa vào cái path đc cung cấp */}
           <Footer />
           <FixedPlugin
             handleImageClick={this.handleImageClick}
