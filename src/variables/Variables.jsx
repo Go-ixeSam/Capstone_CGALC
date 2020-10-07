@@ -267,6 +267,15 @@ var style = {
 // //
 //
 const thArray = ["ID", "Name", "Salary", "Country", "City"];
+const fueltype="fueltype";
+const triptype="triptype";
+const tripArr=["One way","Round Trip"]
+const fuelArr=["Ron95-IV","Ron95-III, E5 Ron92-II, DO 0,001S-V, DO 0,05S-II, Dầu hỏa 2-K"];
+const lengthError="lengthError";
+const positiveNumber="positiveNumber";
+const isCheck="isCheck";
+const select="select";
+
 
 //Đây là nơi chứa dữ liệu giả của template
 const tdArray = [

@@ -1,52 +1,64 @@
 import React from "react";
 import {
-  Grid,
   Row,
   Col,
   DropdownButton,
   MenuItem,
+  Form,
   FormGroup,
   ControlLabel,
   FormControl,
 } from "react-bootstrap";
+
+import { getValidationState } from "../ByMySelf/InputValidation.js";
+import {
+  lengthError,
+  positiveNumber,
+  select,
+} from "../../variables/Variables.jsx";
+
 export const CustomFormGroup = (argument) => {
   let inputElement = null;
   switch (argument.type) {
     case "input":
       return (
         <Col xs={argument.xsNumber}>
-          <FormGroup>
-            <label>{argument.labelText}</label>
-            <FormControl
-              required
-              placeholder={argument.placeholderText}
-              defaultValue={argument.defaultValue}
-              onChange={argument.change}
-            ></FormControl>
-          </FormGroup>
+          <div>
+            <FormGroup
+              validationState={getValidationState(
+                argument.realValue,
+                lengthError
+              )}
+            >
+              <label>{argument.labelText}</label>
+              <FormControl
+                required
+                placeholder={argument.placeholderText}
+                defaultValue={argument.defaultValue}
+                onChange={argument.change}
+              />
+            </FormGroup>
+          </div>
         </Col>
       );
       break;
     case "select":
       return (
         <Col xs={argument.xsNumber}>
-          <FormGroup>
-            {/* <DropdownButton title="Genders" id="GendersInput"
-                    onSelect={argument.select} >
-                        <MenuItem eventKey={1 + 'Male'}>Male</MenuItem>
-                        <MenuItem eventKey={2 + 'Female'}>Female</MenuItem>
-                    </DropdownButton> */}
+          <FormGroup
+            validationState={getValidationState(argument.realValue, select)}
+          >
             <label>{argument.labelText}</label>
             <FormControl
               componentClass="select"
               placeholder="select"
               as="select"
+              onChange={argument.change}
+              value={argument.currentValue}
             >
-              {/* {    
-              argument.options.map((opt) => {
+              {argument.options.map((opt) => {
                 return <option value={opt}>{opt}</option>;
-              })
-              } */}
+              })}
             </FormControl>
           </FormGroup>
         </Col>
@@ -72,7 +84,12 @@ export const CustomFormGroup = (argument) => {
     case "number":
       return (
         <Col xs={argument.xsNumber}>
-          <FormGroup>
+          <FormGroup
+            validationState={getValidationState(
+              argument.realValue,
+              positiveNumber
+            )}
+          >
             <label>{argument.labelText}</label>
             <FormControl
               type={"number"}

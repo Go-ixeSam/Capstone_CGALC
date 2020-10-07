@@ -19,7 +19,7 @@ import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios'
 // import React, { Component } from 'react'
-import Select from 'react-select'
+// import Select from 'react-select'
 import {
   Grid,
   Row,
@@ -39,8 +39,8 @@ import {
 // import { CustomFormGroup } from "components/ByMySelf/Form.js";
 // import avatar from "../assets/img/faces/ricado.jpg";
 // import { Top, NoteItem } from '../components/Order/CustomerInfo.jsx';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
 import lai from "../assets/img/download.jpg";
 import note from "../assets/img/ho-phach.jpg";
 import perfume1 from "../assets/img/nuoc-hoa.jpg";

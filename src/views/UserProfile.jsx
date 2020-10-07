@@ -16,21 +16,23 @@
 
 */
 import React, { Component } from "react";
+import { Table, FormGroup, Radio } from "react-bootstrap";
+import {
+  FormRadio,
+  ItemRadio,
+} from "../components/CustomRadio/CustomRadio.jsx";
 import SeperateLine from "../components/formserparate/SeperateLine.js";
 import * as actionTypes from "../store/actions";
-import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap/dist/css/bootstrap.css";
 import Comment from "../testingonly/Comment.js";
 import axios from "axios";
-// import React, { Component } from 'react'
-// import Select from 'react-select'
 import {
-  Grid,
-  Row,
-  Col,
-  FormGroup,
-  ControlLabel,
-  FormControl,
-} from "react-bootstrap";
+  fueltype,
+  triptype,
+  fuelArr,
+  tripArr,
+} from "../variables/Variables.jsx";
+import { Grid, Row, Form, Col } from "react-bootstrap";
 
 import { connect } from "react-redux";
 import { Card } from "../components/Card/Card.jsx";
@@ -56,12 +58,7 @@ import { CustomFormGroup } from "../components/ByMySelf/Form.js";
 class UserProfile extends Component {
   constructor(props) {
     super(props);
-    // api.get('/').then(res => {
-    //   console.log(res.data)
-    //   this.setState({ course: res.data })
-    // })
     this.state = {
-      // account={
       username: "Samnk",
       password: "2511",
       full_name: "Nguyen Khac Sam",
@@ -71,18 +68,65 @@ class UserProfile extends Component {
       address: "lê văn sĩ",
       city: "HCM",
       is_active: true,
-      // },
       accounts: [],
       course: [],
       posts: [],
       myTitle: "",
-      // selectObject:{
-      //   userId: '77',
-      //   id: '12',
-      //   title: 'Ok',
-      //   body: 'Nothing special ',
-      // },
       postResponse: "",
+      checkboxChecked: false,
+      tripTypeSelect: "One way",
+      fuelTypeSelect: "Ron95-IV",
+      driverSelect: false,
+      driverList: [
+        {
+          driver: {
+            id: "D1",
+            name: "Srpint",
+          },
+        },
+        {
+          driver: {
+            id: "D2",
+            name: "Hayao",
+          },
+        },
+        {
+          driver: {
+            id: "D3",
+            name: "Ngo Ton",
+          },
+        },
+      ],
+
+      //state luu tru du lieu
+      startingLocation: "",
+      destination: "",
+      tripType: "One way",
+      vehicleModel: "",
+      carManufacturer: "",
+      cityMpg: "",
+      highwayMpg: "",
+      tankSize: "",
+      fuelType: "Ron95-IV",
+      driver: {
+        id: "",
+        name: "",
+      },
+      trip: {
+        startingLocation: "",
+        destination: "",
+        tripType: "One way",
+        vehicleModel: "",
+        carManufacturer: "",
+        cityMpg: "",
+        highwayMpg: "",
+        tankSize: "",
+        fuelType: "Ron95-IV",
+        driver: {
+          id: "",
+          name: "",
+        },
+      },
     };
   }
 
@@ -123,59 +167,86 @@ class UserProfile extends Component {
     console.log("đây là title: " + this.state.myTitle);
   };
 
+  handle = (event, fieldName) => {
+    var tmp = { ...this.state.trip };
+    switch (fieldName) {
+      case "startingLocation":
+        this.setState({
+          trip: { ...tmp, startingLocation: event.target.value },
+        });
+        break;
+      case "destination":
+        this.setState({
+          trip: { ...tmp, destination: event.target.value },
+        });
+        break;
+      case "vehicleModel":
+        this.setState({
+          trip: { ...tmp, vehicleModel: event.target.value },
+        });
+        break;
+      case "carManufacturer":
+        this.setState({
+          trip: { ...tmp, carManufacturer: event.target.value },
+        });
+        break;
+      case "cityMpg":
+        this.setState({
+          trip: { ...tmp, cityMpg: event.target.value },
+        });
+        break;
+      case "highwayMpg":
+        this.setState({
+          trip: { ...tmp, highwayMpg: event.target.value },
+        });
+        break;
+      case "tankSize":
+        this.setState({
+          trip: { ...tmp, tankSize: event.target.value },
+        });
+        break;
+      case "tripType":
+        this.setState({
+          trip: { ...tmp, tripType: event.target.value },
+        });
+        break;
+      case "fuelType":
+        this.setState({
+          trip: { ...tmp, fuelType: event.target.value },
+        });
+        break;
+      case "driver":
+        this.setState({
+          trip: {
+            ...tmp,
+            driver: {
+              name: event.target.value,
+            },
+          },
+        });
+        break;
+    }
+  };
   /**
    * Sự khác nhau khi đối số có { } và ko
    * Nếu ko có thì nó chỉ là đối số bt
    * Nếu có thì đối số nhận vào phải có field là event
+   * Mấy cái hàm setState này ko thể tạo thành 1 hàm chung đc
+   * Nó như get và set ấy, mà get và set thì mỗi class đều có riêngriêng
    * @param {*} event
    */
-  formChangeFullnameHandler = (event) => {
-    // console.log(event.target.value);
-    // this.props.fn = event.target.value;
-    this.setState({ full_name: event.target.value });
-    console.log(this.state.full_name);
-  };
-  formChangeEmailHandler = (event) => {
-    this.setState({ email: event.target.value });
-  };
-  formChangeUsernameHandler = (event) => {
-    console.log(event.target.value);
-    this.setState({ username: event.target.value });
-  };
-  formChangeAddressHandler = (event) => {
-    this.setState({ address: event.target.value });
-  };
-  formChangeCityHandler = (event) => {
-    this.setState({ city: event.target.value });
-  };
-  formChangeGendersHandler = (event, eventKey) => {
-    console.log(event[eventKey]);
 
-    this.setState({ genders: event });
-    console.log(event);
-  };
-  formChangePasswordHandler = (event) => {
-    this.setState({ password: event.target.value });
-  };
-  confirmPassword = (confirm) => {
-    console.log(
-      confirm.target.value + "value của pass: " + this.state.password
-    );
-    if (this.state.password === confirm.target.value) {
-      console.log("Vào true rồi");
-    } else {
-      console.log("Vào false rồi");
-    }
+  checkBoxHandle = (event) => {
+    this.setState({
+      checkboxChecked: !this.state.checkboxChecked,
+    });
   };
 
-  // addNewUser = ({ username, password, fullname, dob, role }) => {
-  //   return add({ username, password });
-  // }
-
-  //   submitForm = (event) => {
-  //     event.preventDefault();
-  //     alert('you are submiting '+this.props.state.username)
-  // }
+  submitForm = (event) => {
+    event.preventDefault();
+    alert("you are submiting ");
+    console.log(this.state.trip);
+  };
 
   /**
    * Dùng để test
@@ -184,277 +255,170 @@ class UserProfile extends Component {
     console.log("Click đc rồi địt me");
     console.log(this.state.password);
   };
-
-  addArray = (
-    username,
-    pass,
-    fullname,
-    address,
-    phôt,
-    gender,
-    cirty,
-    is_active
-  ) => {
-    const newArray = [...this.state.accounts];
-    const newName = this.state.full_name;
-    console.log(newName);
-    //     this.setState(newState => {
-    //       newArray = [...newArray, this.state.accoutn = {
-    //         username: 'MyNameisTung',
-    //         password: 'M234234',
-    //         full_name: 'Thế cơ ak',
-    //         photo: '',
-    //         gender: 'female',
-    //         address: '44 downg cong hoa',
-    //         city: 'HN',
-    //         is_active: false
-    //       }
-    // }];
-  };
   render() {
-    var userhahahaha = {
-      name: "sam",
-      avatarUrl: "nothing",
-    };
-    console.log(this.props.up);
-    const newAcoount = this.props.fullprofile;
-
-    console.log(newAcoount.full_name);
-    const genders = ["Male", "Femail"];
+    // console.log("Trip type= " + this.state.trip.tripType);
+    // console.log("Fuel type= " + this.state.trip.driver.name);
     return (
       <div className="content">
         {/* <Comment author={userhahahaha} /> */}
         {/* Cái comment dùng để test rằng ta có thể tách code thành component nhỏ như thế nào */}
-        <Grid fluid>
-          {/* <Row>
-            {console.log('Mảng đây: ' + this.state.posts)}
-            <select ref='fake' value={this.state.myTitle} onChange={(event)=>{this.getSelectOption(event)}}>
-              {this.state.posts.map((ele, index) => {
-                return (
-                  <option value={ele.title}>{ele.title}</option>
-                )
-              })}
-            </select>
+        <Form>
+          <Grid fluid>
+            <Row>
+              <Col md={8}>
+                <Card
+                  title="Trip information"
+                  content={
+                    <div>
+                      <Row>
+                        <CustomFormGroup
+                          xsNumber={5}
+                          realValue={this.state.trip.startingLocation}
+                          type="input"
+                          change={(event) => {
+                            this.handle(event, "startingLocation");
+                          }}
+                          labelText={"Starting Locatin"}
+                          placeholderText={"starting location"}
+                        />
 
-            <button onClick={this.callAPI}>
-              Show data
-        </button>
-          </Row> */}
-          {/* <div>Post data: {this.state.postResponse.title}</div> */}
-          {/* <button onClick={(requestData)=>{this.callPostAPI(this.state.myTitle)}}>Send post</button> */}
-          <Row>
-            <Col md={8}>
-              <Card
-                title="Create new trip"
-                content={
-                  <div>
-                    <Row>
-                      <CustomFormGroup
-                        xsNumber={5}
-                        type="input"
-                        change={(event) => {
-                          this.formChangeUsernameHandler(event);
-                        }}
-                        labelText={"Starting Locatin"}
-                        placeholderText={"starting location"}
-                      />
-
-                      <CustomFormGroup
-                        xsNumber={5}
-                        type="input"
-                        change={(event) => {
-                          this.formChangeEmailHandler(event);
-                        }}
-                        labelText={"Destination"}
-                        placeholderText={"destination"}
-                      />
-                    </Row>
-                    <Row>
-                    <CustomFormGroup
-                        xsNumber={3}
-                        type="select"
-                        // change={(event) => {
-                        //   this.formChangeEmailHandler(event);
-                        // }}
-                        labelText={"Trip Type"}
-                        // options={["One Way","Round Trip"]}
-                        //tam thoi chua quay lai
-                        placeholderText={"trip type"}
-                      />
-                    </Row>
-                    <Row>
-                      <SeperateLine
-                      text="Vehicle information"
-                      />
-                    </Row>
-                    <Row>
-                      <CustomFormGroup
-                        xsNumber={5}
-                        type="input"
-                        change={(event) => {
-                          this.formChangePasswordHandler(event);
-                        }}
-                        labelText={"Vehicle Model"}
-                        placeholderText={"vehical model"}
-                      />
-                      <CustomFormGroup
-                        xsNumber={5}
-                        type="input"
-                        change={(event) => {
-                          this.formChangePasswordHandler(event);
-                        }}
-                        labelText={"Car Manufacturer"}
-                        placeholderText={"car manufacturer"}
-                      />
-                    </Row>
-                    <Row>
-                      <CustomFormGroup
-                        xsNumber={3}
-                        type="number"
-                        change={(password) => {
-                          this.confirmPassword(password);
-                        }}
-                        labelText={"City (mpg)"}
-                        placeholderText={""}
-                      />
-                      <CustomFormGroup
-                        xsNumber={3}
-                        type="number"
-                        change={(password) => {
-                          this.confirmPassword(password);
-                        }}
-                        labelText={"highway (mpg)"}
-                        placeholderText={""}
-
-                      />
-                      <CustomFormGroup
-                        xsNumber={3}
-                        type="number"
-                        change={(password) => {
-                          this.confirmPassword(password);
-                        }}
-                        labelText={"Tank size"}
-                        placeholderText={""}
-
-                      />
-                      <CustomFormGroup
-                        xsNumber={3}
-                        type="select"
-                        change={(password) => {
-                          this.confirmPassword(password);
-                        }}
-                        labelText={"Fuel Type"}
-                        placeholderText={""}
-                      />
-                    </Row>
-                    <Row>
-                      <SeperateLine
-                      text="Driver"
-                      />
-                    </Row>
-                    {/* <Row>
-                      <CustomFormGroup
-                        xsNumber={4}
-                        type='password'
-                        change={(password) => this.confirmPassword(password)}
-                        labelText={'Confirm Password'}
-                        placeholderText={'Confirm Password'} />
-                    </Row> */}
-                    {/* <Row>
-                      <CustomFormGroup
-                        xsNumber={6}
-                        type="input"
-                        change={(event) => {
-                          this.formChangeFullnameHandler(event);
-                        }}
-                        labelText={"Fullname"}
-                        placeholderText={"Full name"}
-                      />
-                    </Row>
-                    <Row>
-                      <CustomFormGroup
-                        xsNumber={12}
-                        type="input"
-                        change={(event) => {
-                          this.formChangeAddressHandler(event);
-                        }}
-                        labelText={"Address"}
-                        placeholderText={"Address"}
-                      />
-                    </Row>
-                    <Row>
-                      <CustomFormGroup
-                        xsNumber={6}
-                        type="input"
-                        change={(event) => {
-                          this.formChangeCityHandler(event);
-                        }}
-                        labelText={"City"}
-                        placeholderText={"City"}
-                      />
-                      <CustomFormGroup
-                        xsNumber={3}
-                        type="select"
-                        labelText={"Genders"}
-                        select={(event) => {
-                          this.formChangeGendersHandler(event);
-                        }}
-                      />
-                    </Row> */}
-
-                    <Row>
-                      <Col xs={12}>
-                        <Button
-                          bsStyle="info"
-                          fill
-                          type="submit"
-                          // pullRight
-                          // onClick={(full_name, user_name, email, address, city, gender) => { this.props.submitTheForm(this.state.full_name, this.state.username, this.state.email, this.state.address, this.state.gender)
-                          //  }
-                          // }
-                        >
-                          Submit
-                        </Button>
-                      </Col>
-                    </Row>
-
-                    <div className="clearfix" />
+                        <CustomFormGroup
+                          xsNumber={5}
+                          type="input"
+                          realValue={this.state.trip.destination}
+                          change={(event) => {
+                            this.handle(event, "destination");
+                          }}
+                          labelText={"Destination"}
+                          placeholderText={"destination"}
+                        />
+                      </Row>
+                      <Row>
+                        <CustomFormGroup
+                          xsNumber={3}
+                          type="select"
+                          realValue={this.state.trip.tripType}
+                          info={triptype}
+                          labelText={"Trip Type"}
+                          options={["One way", "Round Trip"]}
+                          placeholderText={"trip type"}
+                          currentValue={this.state.trip.tripType}
+                          change={(event) => this.handle(event, "tripType")}
+                        />
+                      </Row>
+                      <Row>
+                        <SeperateLine text="Vehicle information" />
+                      </Row>
+                      <Row></Row>
+                      <Row>
+                        <CustomFormGroup
+                          realValue={this.state.trip.cityMpg}
+                          xsNumber={3}
+                          type="number"
+                          change={(event) => {
+                            this.handle(event, "cityMpg");
+                          }}
+                          labelText={"City (mpg)"}
+                          placeholderText={""}
+                        />
+                        <CustomFormGroup
+                          xsNumber={3}
+                          realValue={this.state.trip.highwayMpg}
+                          type="number"
+                          change={(event) => {
+                            this.handle(event, "highwayMpg");
+                          }}
+                          labelText={"highway (mpg)"}
+                          placeholderText={""}
+                        />
+                        <CustomFormGroup
+                          xsNumber={3}
+                          realValue={this.state.trip.tankSize}
+                          type="number"
+                          change={(event) => {
+                            this.handle(event, "tankSize");
+                          }}
+                          labelText={"Tank size"}
+                          placeholderText={""}
+                        />
+                        <CustomFormGroup
+                          xsNumber={3}
+                          type="select"
+                          realValue={this.state.trip.fuelType}
+                          info={fueltype}
+                          options={[
+                            "Ron95-IV",
+                            "Ron95-III",
+                            "E5 Ron92-II",
+                            "DO 0,001S-V",
+                            "DO 0,05S-II",
+                            "Dầu hỏa 2-K",
+                          ]}
+                          change={(event) => {
+                            this.handle(event, "fuelType");
+                          }}
+                          labelText={"Fuel Type"}
+                          placeholderText={""}
+                        />
+                      </Row>
+                      <Row>
+                        <Col xs={12}>
+                          <Button
+                            bsStyle="info"
+                            fill
+                            type="submit"
+                            // pullRight
+                            onClick={(event) => {
+                              this.submitForm(event);
+                            }}
+                          >
+                            Submit
+                          </Button>
+                        </Col>
+                      </Row>
+                      <div className="clearfix" />
+                    </div>
+                  }
+                />
+              </Col>
+              <Col md={2} style={{ background: "#fff", border: "#333333" }}>
+                <Row>
+                  <div style={{ marginTop: 15, marginLeft: 15 }}>
+                    <h4>Driver</h4>
                   </div>
-                }
-              />
-            </Col>
-            {/* <Col md={4} >
-              <UserCard
-                bgImage="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400"
-                avatar={avatar}
-                name="Mike Andrew"
-                userName="michael24"
-              description={
-                <span>
-                  "Lamborghini Mercy
-                  <br />
-                  Your chick she so thirsty
-                  <br />
-                  I'm in that two seat Lambo"
-                </span>
-              } 
-              socials={
-                <div>
-                  <Button simple>
-                    <i className="fa fa-facebook-square" />
-                  </Button>
-                  <Button simple>
-                    <i className="fa fa-twitter" />
-                  </Button>
-                  <Button simple>
-                    <i className="fa fa-google-plus-square" />
-                  </Button>
-                </div>
-              }
-              />
-            </Col> */}
-          </Row>
-        </Grid>
+                  <div
+                    style={{
+                      marginLeft: 15,
+                      marginRight: 15,
+                      marginBottom: 15,
+                    }}
+                  >
+                    {this.state.driverList.map((drv) => {
+                      return (
+                        <FormRadio
+                          // currentValue={this.state.trip.driver.name}
+                          content={
+                            <ItemRadio
+                              cssClassName={
+                                drv.driver.name == this.state.trip.driver.name
+                                  ? "labelp_green"
+                                  : "labelp"
+                              }
+                              label={drv.driver.name}
+                              change={(event) => {
+                                this.handle(event, "driver");
+                              }}
+                            />
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                </Row>
+              </Col>
+            </Row>
+          </Grid>
+        </Form>
       </div>
     );
   }

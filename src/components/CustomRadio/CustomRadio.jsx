@@ -16,8 +16,15 @@
 
 */
 import React, { Component } from "react";
-
-class CustomRadio extends Component {
+import { FormGroup, Radio } from "react-bootstrap";
+import { getValidationState } from "../ByMySelf/InputValidation.js";
+import {
+  lengthError,
+  positiveNumber,
+  isCheck,
+} from "../../variables/Variables.jsx";
+import "../CustomRadio/CustomRadio.css"
+export class CustomRadio extends Component {
   render() {
     const { number, label, option, name, ...rest } = this.props;
 
@@ -30,4 +37,27 @@ class CustomRadio extends Component {
   }
 }
 
-export default CustomRadio;
+export const FormRadio = (argument) => {
+  return (
+    <FormGroup
+      // validationState={getValidationState(argument.currentValue, isCheck)}
+    >
+      {argument.content}
+    </FormGroup>
+  );
+};
+
+export const ItemRadio = (argument) => {
+  return (
+    <div style={{ width: "max-content" }}>
+      <Radio
+        name="radioGroup"
+        inline
+        value={argument.label}
+        onChange={argument.change}
+      >
+        <p className={argument.cssClassName}>{argument.label}</p>
+      </Radio>
+    </div>
+  );
+};

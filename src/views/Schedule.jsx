@@ -20,7 +20,7 @@ import * as actionTypes from '../store/actions';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios'
 // import React, { Component } from 'react'
-import Select from 'react-select'
+// import Select from 'react-select'
 import {
   Grid,
   Row,
