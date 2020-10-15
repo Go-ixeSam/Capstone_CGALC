@@ -23,20 +23,22 @@ import AdminNavbar from "../components/Navbars/AdminNavbar";
 import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.jsx";
-
-import { style } from "../variables/Variables.jsx";
-
+import { style, primaryColor, yellowColor } from "../variables/Variables.jsx";
 import routes from "../routes.js";
-
 import image from "../assets/img/sidebar-3.jpg";
+import { messaging } from "../init-fcm";
 
+console.log("màu đây: " + primaryColor);
+
+var color = primaryColor;
 class Admin extends Component {
+  //
   constructor(props) {
     super(props);
     this.state = {
       _notificationSystem: null,
       image: image,
-      color: "black",
+      // color: color,
       hasImage: true,
       fixedClasses: "dropdown show-dropdown open",
     };
@@ -82,15 +84,21 @@ class Admin extends Component {
     var role = 1;
     var route = <Route></Route>;
     return routes.map((prop, key) => {
+      //props ở đây chính là phần từ trong mảng routes sau khi dùng .map
       // Nếu đây là admin layout thì mới thực hiện route
       if (prop.layout == "/admin") {
         if (role == 1) {
-          // return (
+          // role==1 là mình dùng để test cho trường hợp đăng nhập có nhiều role
           route = (
             <Route
               path={prop.layout + prop.path}
               //path: Tên đường dẫn
               render={(props) => (
+                /**
+                 * render={(props), kĩ thuật render props
+                 * ngay tại lúc này, khi 1 page đc layout thì đồng thời sẽ render ra
+                 * một notification luônluôn
+                 */
                 <prop.component
                   {...props}
                   handleClick={this.handleNotificationClick}
@@ -100,23 +108,10 @@ class Admin extends Component {
             />
           );
           // );
-        }else{
-          route=<div>HalloHallo</div>
+        } else {
+          route = <div>HalloHallo</div>;
         }
         return route;
-        // return (
-        //   <Route
-        //     path={prop.layout + prop.path}
-        //     //path: Tên đường dẫn
-        //     render={props => (
-        //       <prop.component
-        //         {...props}
-        //         handleClick={this.handleNotificationClick}
-        //       />
-        //     )}
-        //     key={key}
-        //   />
-        // );
       } else {
         return null;
       }
@@ -150,7 +145,64 @@ class Admin extends Component {
       this.setState({ fixedClasses: "dropdown" });
     }
   };
+
+  notifyMe() {
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
+    }
+
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+      // If it's okay let's create a notification
+      var notification = new Notification("Hi there!");
+      this.getCurrentToken()
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+          var notification = new Notification("Hi there!");
+          this.getCurrentToken()
+        }
+      });
+    }
+
+    // At last, if the user has denied notifications, and you
+    // want to be respectful there is no need to bother them any more.
+  }
+  getCurrentToken = () => {
+    // Get Instance ID token. Initially this makes a network call, once retrieved
+    // subsequent calls to getToken will return from cache.
+    messaging
+      .getToken()
+      .then((currentToken) => {
+       console.log("Day la Token= "+currentToken)
+      })
+      .catch((err) => {
+        console.log("An error occurred while retrieving token. ", err);
+        // showToken("Error retrieving Instance ID token. ", err);
+        // setTokenSentToServer(false);
+      });
+  };
+
   componentDidMount() {
+    // messaging
+    //   .requestPermission()
+    //   .then(async function () {
+    //     const token = await messaging.getToken();
+    //   })
+    //   .catch(function (err) {
+    //     console.log("Unable to get permission to notify.", err);
+    //   });
+    // navigator.serviceWorker.addEventListener("message", (message) =>
+    //   console.log("Day ne: " + message)
+    // );
+
+    this.notifyMe();
+
     // Khai báo 1 notification system ở đây
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
@@ -201,6 +253,7 @@ class Admin extends Component {
       this.refs.mainPanel.scrollTop = 0;
     }
   }
+
   render() {
     return (
       <div className="wrapper">
@@ -208,8 +261,10 @@ class Admin extends Component {
         <Sidebar
           {...this.props}
           routes={routes}
+          // Nhận vào một mảng route
           image={this.state.image}
-          color={this.state.color}
+          // color={primaryColor}
+          // color={"#EB5757"}
           hasImage={this.state.hasImage}
         />
         <div id="main-panel" className="main-panel" ref="mainPanel">
@@ -218,6 +273,7 @@ class Admin extends Component {
             brandText={this.getBrandText(this.props.location.pathname)}
           />
           <Switch>{this.getRoutes(routes)}</Switch>
+          {/* Cai phan nay danh co navBar, la cai bar o tren top */}
           {/* Switch đây là chỗ sẽ đưa ta đến page cần đến dựa vào cái path đc cung cấp */}
           <Footer />
           <FixedPlugin

@@ -6,3 +6,4 @@ export const FULL_NAME = 'fullname';
 export const ADDRESS = 'address';
 export const GENDER = 'gender';
 export const EMAIL = 'email';
+export const CREATETRIP = 'createtrip';

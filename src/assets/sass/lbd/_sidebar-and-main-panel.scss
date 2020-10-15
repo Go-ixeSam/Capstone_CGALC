@@ -3,7 +3,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    width: 260px;
+    width: 210px;
     display: block;
     z-index: 1;
     color: #fff;
@@ -15,7 +15,7 @@
         position: relative;
         height: calc(100vh - 75px);
         overflow: auto;
-        width: 260px;
+        width: 210px;
         z-index: 4;
         padding-bottom: 30px;
     }
@@ -51,7 +51,7 @@
             float: left;
             text-align: center;
             width: 30px;
-            margin-right: 15px;
+            margin-right: 5px;
 
             img{
                 width: 40px;
@@ -69,8 +69,8 @@
             width: 34px;
             display: inline-block;
             height: 34px;
-            margin-left: -2px;
-            margin-top: -2px;
+            margin-left: -9px;
+            margin-top: -9px;
             margin-right: 10px;
             border-radius: 30px;
             text-align: center;
@@ -161,12 +161,12 @@ body > .navbar-collapse{
         }
 
         .simple-text{
-            text-transform: uppercase;
+            // text-transform: uppercase;
             padding: $padding-small-vertical $padding-zero;
             display: block;
-            font-size: $font-size-large;
-            color: $white-color;
-            font-weight: $font-weight-normal;
+            font-size: $font-size-small;
+            color: $capstone-yellow;
+            font-weight: $font-weight-bold;
             line-height: 30px;
         }
     }

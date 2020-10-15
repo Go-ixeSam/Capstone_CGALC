@@ -15,37 +15,41 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { composeWithDevTools } from "redux-devtools-extension";
 import React from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import reducers from './store/reducers/userprofile'
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import reducers from "./store/reducers/userprofile";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/animate.min.css";
 import "./assets/sass/light-bootstrap-dashboard-react.scss?v=1.3.0";
 import "./assets/css/demo.css";
-import rootReducer from './store/reducers'
+import rootReducer from "./store/reducers";
 import "./assets/css/pe-icon-7-stroke.css";
 import SignUp from "../src/SignIn.js";
-import SignIn from "../src/SignUp.js"
-
+import SignIn from "../src/SignUp.js";
+import TripRoute from "./views/RouteTrip.jsx";
+import Noti from "./views/Notifications.jsx";
 import AdminLayout from "../src/layouts/Admin.jsx";
 // const store = createStore(reducers);
-const store = createStore(rootReducer,composeWithDevTools());
-
+const store = createStore(rootReducer, composeWithDevTools());
 
 ReactDOM.render(
   <Provider store={store}>
-  <BrowserRouter>
-    <Switch>
-      <Route path="/admin" render={props => <AdminLayout {...props} />} />
-      <Redirect from="/" to="/admin/dashboard" />
-    </Switch>
-  </BrowserRouter>,
-  // </Provider>,
+    {/* Đây là nơi mà sẽ render ra giao diện tùy ứng theo đường dẫndẫn */}
+    <BrowserRouter>
+      <Switch>
+        {/* Mặc định load trang thì admin layout sẽ được load */}
+        <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+        {/* Sau khi admin layout load  thì screen dashboard sẽ được chạy trước */}
+        <Redirect from="/" to="/admin/dashboard" />
+      </Switch>
+    </BrowserRouter>
+    , //{" "}
+  </Provider>,
   document.getElementById("root")
 );

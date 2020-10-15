@@ -275,6 +275,10 @@ const lengthError="lengthError";
 const positiveNumber="positiveNumber";
 const isCheck="isCheck";
 const select="select";
+const baseUrl="";
+const CLASS="";
+const routetriplink="/admin/routetrip";
+const firebaseToken="e01y43_6_pR9jAhHlZmxLu:APA91bHLrZOXkyJLcRtR6TxltEcqFZ8LOoL3ZIzCSjOcL-bs1ZpeiYLgDtDAdzJ8xQALo_YTx0NqyCSH7PZdMPwe23oeXUaTUI-i5s55j-gagHM2zwAtXV6Ge3KYGaQy2iyytOtUgjW-";
 
 
 //Đây là nơi chứa dữ liệu giả của template
@@ -607,7 +611,10 @@ var legendBar = {
   names: ["Tesla Model S", "BMW 5 Series"],
   types: ["info", "danger"]
 };
-
+const primaryColor="#032D23";
+const secondsecondColor="#34CBA7";
+const yellowColor="#AAA713";
+const lightYellowColor="#F2F1AD";
 module.exports = {
   style, // For notifications (App container and Notifications view)
   thArray,
@@ -622,5 +629,13 @@ module.exports = {
   dataBar,
   optionsBar,
   responsiveBar,
+  routetriplink,
+  secondsecondColor,
+  yellowColor,
+  primaryColor,
+  lightYellowColor,
+  firebaseToken,
+  baseUrl,
+  CLASS,
   legendBar // For charts (Dashboard view)
 };

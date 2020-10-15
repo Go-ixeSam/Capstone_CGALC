@@ -19,8 +19,56 @@ import React, { Component } from "react";
 import { Grid, Row, Col, Alert } from "react-bootstrap";
 
 import Button from "../components/CustomButton/CustomButton.jsx";
+import { AxiosMethod } from "../axios.js";
+// import firebase from "../Firebase.js"
 
 class Notifications extends Component {
+  sendAway = () => {
+    const fetchOptions = {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        authorization:
+          "key=AAAALjq0_jI:APA91bHFs8JApJ-NSXaBnHIZKrk4hHOYbj6uwRruqGe5ASDq2CKM3P_0eC2LbhKpteCqWzHWdy3T9BNKVUGPCMKXu5POoYdc1Yz1GNa7QSeabZT4hKQcC51wGnvJNrNunmbm2lBbymN_",
+        "content-type": "application/json",
+      },
+      body: {
+        collapse_key: "type_a",
+        notification: {
+          body: "Body of Your Notification",
+          title: "Title of Your Notification",
+          icon:
+            "http://www.liberaldictionary.com/wp-content/uploads/2019/02/icon-0326.jpg",
+        },
+        data: {
+          body: "Thành công rồi ông GiáGiá",
+          title: "Lời chào đáng yêu",
+          key_1: "Value for key_1",
+          key_2: "Value for key_2",
+        },
+        to: "Device TOKEN HERE",
+      },
+    };
+
+    fetch("https://fcm.googleapis.com/fcm/send", fetchOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  };
+
+  /**
+   * Da thanh cong
+   */
+  testAxios = () => {
+    const data = new AxiosMethod();
+    const params = {
+      url: "https://jsonplaceholder.typicode.com/posts",
+      type: "post",
+      param: { title: "foo", body: "bar", userId: 1 },
+    };
+    data.metdasdhod(params).then((result) => {
+      console.log(result.data);
+    });
+  };
   render() {
     return (
       <div className="content">
@@ -189,6 +237,21 @@ class Notifications extends Component {
                     >
                       Bottom Right
                     </Button>
+                  </Col>
+                  <Col md={55}>
+                    {/* <form>
+                      <label>
+                        Name:
+                        <input type="text" name="name" />
+                      </label>
+                      <label>
+                        message:
+                        <input type="text" name="messsage" />
+                      </label>
+                      <input type="submit" value="Submit" />
+                    </form> */}
+                    <button onClick={this.sendAway}>Gửi đi nè</button>
+                    <button onClick={this.testAxios}>CheckAxios</button>
                   </Col>
                 </Row>
               </div>

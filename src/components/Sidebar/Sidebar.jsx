@@ -17,16 +17,16 @@
 */
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-
+import { routetriplink, isCheck } from "../../variables/Variables.jsx";
 import AdminNavbarLinks from "../Navbars/AdminNavbarLinks.jsx";
-
-import logo from "../../assets/img/reactlogo.png";
+import "../Sidebar/Sidebar.css";
+import logo from "../../assets/img/gas_station_background.png";
 
 class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: window.innerWidth
+      width: window.innerWidth,
     };
   }
   activeRoute(routeName) {
@@ -41,23 +41,21 @@ class Sidebar extends Component {
   }
   render() {
     const sidebarBackground = {
-      backgroundImage: "url(" + this.props.image + ")"
+      backgroundImage: "url(" + this.props.image + ")",
     };
     return (
       <div
         id="sidebar"
         className="sidebar"
-        data-color={this.props.color}
+        // color={this.props.color}
         data-image={this.props.image}
       >
-          {this.props.hasImage ? (
-            <div className="sidebar-background" style={sidebarBackground} />
-          ) : (
-            null
-          )}
+        {this.props.hasImage ? (
+          <div className="sidebar-background" style={sidebarBackground} />
+        ) : null}
         <div className="logo">
           <a
-            href="https://www.creative-tim.com?ref=lbd-sidebar"
+            // href="https://www.creative-tim.com?ref=lbd-sidebar"
             className="simple-text logo-mini"
           >
             <div className="logo-img">
@@ -65,37 +63,52 @@ class Sidebar extends Component {
             </div>
           </a>
           <a
-            href="https://www.creative-tim.com?ref=lbd-sidebar"
             className="simple-text logo-normal"
           >
-            Creative Tim
+            Cheap Gas Station
           </a>
         </div>
         <div className="sidebar-wrapper">
           <ul className="nav">
             {this.state.width <= 991 ? <AdminNavbarLinks /> : null}
+            {/* cái dòng trên là resposive, nếu chiều ngang mà nhỏ hơn 991 thì cái side bar sẽ thu lại */}
             {this.props.routes.map((prop, key) => {
-              if (!prop.redirect)
-                return (
-                  <li
-                    className={
-                      prop.upgrade
-                        ? "active active-pro"
-                        : this.activeRoute(prop.layout + prop.path)
-                    }
-                    key={key}
-                  >
-                    <NavLink
-                      to={prop.layout + prop.path}
-                      className="nav-link"
-                      activeClassName="active"
+              var li = <li></li>;
+              // //Cái dòng trên có tác dụng để dấu đi những cái NavLink chỉ có thể
+              // xuất hiện khi nhấp button
+              if (prop.layout + prop.path == routetriplink) {
+                li = <li display="none" />;
+              } else {
+                if (!prop.redirect)
+                  return (
+                    <li
+                      className={
+                        prop.upgrade
+                          ? "active active-pro"
+                          : this.activeRoute(prop.layout + prop.path)
+                      }
+                      key={key}
                     >
-                      <i className={prop.icon} />
-                      <p>{prop.name}</p>
-                    </NavLink>
-                  </li>
-                );
-              return null;
+                      {/* Dòng li trên chủ yếu để unlock cái gì đấy nếu dùng phiên bản trả tiền, đã test
+                    và đéo nên quan tâmtâm
+                    */}
+                      <NavLink
+                        // display="none"
+                        // Đây là nơi ta sẽ navigate đến screen tương ứng, đường dẫn link sẽ được truyền tới Admin.jsxjsx
+                        to={prop.layout + prop.path}
+                        className="nav-link"
+                        activeClassName="active"
+                      >
+                        {/* {console.log(prop.layout + prop.path)} */}
+                        <i className={prop.icon} />
+                        {/* Nếu muốn dùng mấy icon dạng png thì thay cái <i> bằng <img>, và đổi lại hết đống
+                      icon ở file routes.js, vì cái đó đc tạo từ css */}
+                        <p>{prop.name}</p>
+                      </NavLink>
+                    </li>
+                  );
+                return null;
+              }
             })}
           </ul>
         </div>

@@ -19,17 +19,19 @@ import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import cx from "classnames";
 import PropTypes from "prop-types";
+import { NavLink, Link } from "react-router-dom";
+import "./CustomButton.css";
 
 class CustomButton extends Component {
   render() {
-    const { fill, simple, pullRight, round, block, ...rest } = this.props;//tham số ko biết là bao nên "...rest" cho ta truyền bao nhiêu cái cũng đc
+    const { fill, simple, pullRight, round, block, ...rest } = this.props; //tham số ko biết là bao nên "...rest" cho ta truyền bao nhiêu cái cũng đc
 
     const btnClasses = cx({
       "btn-fill": fill,
       "btn-simple": simple,
       "pull-right": pullRight,
       "btn-block": block,
-      "btn-round": round
+      "btn-round": round,
     });
 
     return <Button className={btnClasses} {...rest} />;
@@ -41,7 +43,42 @@ CustomButton.propTypes = {
   simple: PropTypes.bool,
   pullRight: PropTypes.bool,
   block: PropTypes.bool,
-  round: PropTypes.bool
+  round: PropTypes.bool,
+};
+
+/**
+ * Custom thêm chức năng chuyển trang
+ * @param {*} argument
+ */
+export const MyButton = (argument) => {
+  return (
+    <Link
+      // Đây là nơi ta sẽ navigate đến screen tương ứng, đường dẫn link sẽ được truyền tới Admin.jsxjsx
+      to={"/admin/routetrip"}
+    >
+      <Button bsStyle={argument.style} onClick={argument.click}>
+        {console.log(argument.layout + argument.path)}
+        {/* <i className={prop.icon} /> */}
+        {/* Nếu muốn dùng mấy icon dạng png thì thay cái <i> bằng <img>, và đổi lại hết đống
+      icon ở file routes.js, vì cái đó đc tạo từ css */}
+        {argument.text}
+      </Button>
+    </Link>
+  );
+};
+
+/**
+ * Nếu selection là true thì class của cái button này sẽ là "acceptButton", còn ko thì decineButtondecineButton
+ * @param {*} argument
+ */
+export const DecideButton = (argument) => {
+  var classes = "";
+  if (argument.select == true) {
+    classes = "acceptButton";
+  } else {
+    classes = "decineButton";
+  }
+  return <Button bsClass={classes}>{argument.text}</Button>;
 };
 
 export default CustomButton;

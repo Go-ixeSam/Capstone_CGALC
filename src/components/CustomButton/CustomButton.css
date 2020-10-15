@@ -1,0 +1,23 @@
+:root {
+  --primaryColor: #f2f1ad;
+  --secondColor: #ddf8f1;
+  --headerTextColor: black;
+  --height: 15px;
+  --imageWidth: 20px;
+  --imageHeight: 20px;
+  --headerRadius: 5px;
+  --max-content: "max-content";
+}
+
+.acceptButton,
+.decineButton {
+  width: var(--max-content);
+  border: 0px;
+  background: rgb(3, 136, 136);
+  height: var(--max-content);
+  color: white;
+  font-weight: bold;
+}
+.decineButton {
+  background: red;
+}

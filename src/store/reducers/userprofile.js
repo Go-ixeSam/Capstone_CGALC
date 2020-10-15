@@ -12,7 +12,6 @@ const initialState = {
         is_active: true,
     },
     accounts: []
-
 }
 
 const userprofile = (state = initialState.accounts, action) => {
@@ -23,16 +22,6 @@ const userprofile = (state = initialState.accounts, action) => {
         case actionTypes.ADD:
             alert('Đây là hàng mới: ' + action.fullname + 'username: ' + action.username);
             console.log(action.fullname);
-            // return {
-            //     ...newAccount,
-            //     full_name: action.fullname,
-            //     username: action.username,
-            //     address: action.address,
-            //     city: action.city,
-            //     gender: action.gender,
-            //     email: action.mail
-            // };
-            // alert('Đây là hàng mới: '+action.fullname+'username: '+action.username);
             console.log(action.fullname);
             return [...state,
             {

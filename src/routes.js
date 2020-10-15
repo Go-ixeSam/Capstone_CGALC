@@ -26,6 +26,8 @@ import Upgrade from "./views/Upgrade.jsx";
 import Order from "./views/Order.jsx";
 import Schedule from "./views/Schedule.jsx";
 import trip from "./assets/img/trip.png";
+import RouteTrip from "./views/RouteTrip.jsx";
+import MapWithExplain from "./views/Maps_withExplain.jsx";
 
 var number = 1; //Dùng cách này để kiểm tra role của user, vì chỗ này như 1 cái biến thôi nên ta sẽ ko tạo 1 component ở đây. Thay đổi
 // cách để khi đăng nhập vào sẽ mở chức năng tương tự
@@ -35,6 +37,13 @@ const dashboardRoutes = [
         name: "Dashboard",
         icon: "pe-7s-graph",
         component: Dashboard,
+        layout: "/admin",
+      },
+      {
+        path: "/routetrip",
+        name: "RouteTrip",
+        // icon: "pe-7s-graph",
+        component: RouteTrip,
         layout: "/admin",
       },
       {
@@ -94,6 +103,13 @@ const dashboardRoutes = [
         component: Notifications,
         layout: "/admin",
       },
+      // {
+      //   path: "/mapexplain",
+      //   name: "Map with explainn",
+      //   icon: "pe-7s-bell",
+      //   component: MapWithExplain,
+      //   layout: "/admin",
+      // },
     ];
 // {
 //   if (number == 1) {

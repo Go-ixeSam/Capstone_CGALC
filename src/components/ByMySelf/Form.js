@@ -26,7 +26,7 @@ export const CustomFormGroup = (argument) => {
           <div>
             <FormGroup
               validationState={getValidationState(
-                argument.realValue,
+                argument.realValue,//day la biến dùng để check validation
                 lengthError
               )}
             >
@@ -43,6 +43,11 @@ export const CustomFormGroup = (argument) => {
       );
       break;
     case "select":
+      // Đây là 1 điều kiện đặt ra để phân biệt loại truck select
+      var itemOption = argument.options;
+      if (argument.info == "truck") {
+        itemOption = argument.truckOptions;
+      }
       return (
         <Col xs={argument.xsNumber}>
           <FormGroup
@@ -56,7 +61,7 @@ export const CustomFormGroup = (argument) => {
               onChange={argument.change}
               value={argument.currentValue}
             >
-              {argument.options.map((opt) => {
+              {itemOption.map((opt) => {
                 return <option value={opt}>{opt}</option>;
               })}
             </FormControl>
