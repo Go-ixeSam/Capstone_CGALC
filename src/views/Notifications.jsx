@@ -61,12 +61,17 @@ class Notifications extends Component {
   testAxios = () => {
     const data = new AxiosMethod();
     const params = {
-      url: "https://jsonplaceholder.typicode.com/posts",
-      type: "post",
-      param: { title: "foo", body: "bar", userId: 1 },
+      url: "Trip/GetRoute",
+      type: "get",
+      parameter: {
+        from: "44 Đường số 9, phường 13, Quận 6, Thành phố Hồ Chí Minh",
+        to:
+          "Công viên Phần mềm Quang Trung, Tân Chánh Hiệp, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
+        truckid: 1,
+      },
     };
     data.metdasdhod(params).then((result) => {
-      console.log(result.data);
+      console.log(result);
     });
   };
   render() {
@@ -251,6 +256,9 @@ class Notifications extends Component {
                       <input type="submit" value="Submit" />
                     </form> */}
                     <button onClick={this.sendAway}>Gửi đi nè</button>
+                    <button onClick={() => this.props.handleClick("br")}>
+                      Test thử cái đập trai này
+                    </button>
                     <button onClick={this.testAxios}>CheckAxios</button>
                   </Col>
                 </Row>

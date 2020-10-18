@@ -62,7 +62,10 @@ export const CustomFormGroup = (argument) => {
               value={argument.currentValue}
             >
               {itemOption.map((opt) => {
-                return <option value={opt}>{opt}</option>;
+                return <option value={opt.id?opt.id:opt}>{opt.value?opt.value:opt}</option>;
+                //Dòng value có nghĩa là những loại select có id thì value sẽ để id,
+                // còn ko thì để giá trị mặc định
+                //opt.value cũng vậy
               })}
             </FormControl>
           </FormGroup>

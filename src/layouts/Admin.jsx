@@ -27,6 +27,7 @@ import { style, primaryColor, yellowColor } from "../variables/Variables.jsx";
 import routes from "../routes.js";
 import image from "../assets/img/sidebar-3.jpg";
 import { messaging } from "../init-fcm";
+import  Notifications  from "../views/Notifications.jsx";
 
 console.log("màu đây: " + primaryColor);
 
@@ -156,6 +157,9 @@ class Admin extends Component {
     else if (Notification.permission === "granted") {
       // If it's okay let's create a notification
       var notification = new Notification("Hi there!");
+      // <Notifications
+      // handleClick={this.handleNotificationClick("trtr")}
+      // />
       this.getCurrentToken()
     }
 

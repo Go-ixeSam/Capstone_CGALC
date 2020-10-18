@@ -16,6 +16,8 @@
 
 */
 import React from "react";
+import { MapTest } from "./Testing_HOC.jsx";
+
 import fromm from "../assets/img/from_location.png";
 import {
   withScriptjs,
@@ -281,14 +283,15 @@ const MapWithABicyclingLayer = compose(
  * Kiểm tra chức năng DirectionRenderDirectionRender
  * @param {*} param0
  */
-const MapWithADirectionsRenderer = compose(
+
+export const MapWithADirectionsRenderer = compose(
   withProps({
     googleMapURL:
       "https://maps.googleapis.com/maps/api/js?key=" +
       key +
       "&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `300px`, width: 400 }} />,
+    containerElement: <div style={{ height: `200px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withScriptjs,
@@ -296,25 +299,37 @@ const MapWithADirectionsRenderer = compose(
   lifecycle({
     componentDidMount() {
       const DirectionsService = new google.maps.DirectionsService();
+
+      var { fromLat, fromLng, toLat, toLng } = this.props;
+      var origin = {
+        lat: fromLat,
+        lng: fromLng,
+      };
+      var destination = { lat: toLat, lng: toLng };
+      console.log("Phan component");
+      console.log(origin);
+      console.log(destination);
+
       var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(10.750073, 106.631325),
         map: google.maps,
-        icon: iconBase + fromm,
+        icon: fromm,
       });
       const arr = [];
-      var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
 
-      // new google.maps.DirectionsWaypoint(Location=new google.maps.LatLng(10.772497, 106.698464))
       arr.push({
         location: new google.maps.LatLng(10.772497, 106.698464),
         stopover: true,
-      });
+      }); //Chuẩn bị waypoint
+
       DirectionsService.route(
         {
-          origin: new google.maps.LatLng(10.750073, 106.631325),
-          waypoints: arr, //chọn thêm các điểm phải dừngdừng
-          destination: new google.maps.LatLng(10.777132, 106.663837),
+          origin: origin,
+          // origin: new google.maps.LatLng(fromLat, fromLng),
+          destination: destination,
+          // destination: new google.maps.LatLng(toLat, toLng),
+          // waypoints: arr,
           travelMode: google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
@@ -331,15 +346,8 @@ const MapWithADirectionsRenderer = compose(
     },
   })
 )((props) => (
-  <GoogleMap
-    defaultZoom={7}
-    // defaultCenter={new google.maps.LatLng(41.85073, -87.65126)}
-  >
+  <GoogleMap defaultZoom={7}>
     {props.directions && <DirectionsRenderer directions={props.directions} />}
-    {/* <Marker
-      icon={fromm}
-      position={{ lat: 10.750073, lng: 106.631325 }}
-    /> */}
   </GoogleMap>
 ));
 
@@ -803,64 +811,88 @@ const PlacesWithStandaloneSearchBox = compose(
  * @param {*} param0
  */
 
-function Maps({ ...prop }) {
+export function Maps(prop) {
+  //   var argument = prop.locations;
+  //   console.log("Bên nhận");
+  //   console.log(prop.locations);
+
+  // {
+  //   from: { fromLat: 41.85073, fromLng: -87.65126 },
+  //   to: { toLat: 41.85258, toLng: -87.65141 },
+  // };
   //...prop cho ta biét sẽ có nhiều tham số đc thêm vào, và ta ko cần phải mất công đặt tên từng cái
+  const location = {
+    fromLat: 10.7521826,
+    fromLng: 106.6273672,
+    toLat: 10.7530514,
+    toLng: 106.6268726,
+  };
   return (
-    // <CustomMap
-    //   googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+key+"&v=3.exp&libraries=geometry,drawing,places"}
-    //   // AIzaSyAo421sSPdh65qh2f0B08C2U4eU5-pGg4c
-    //   loadingElement={<div style={{ height: `100%` }} />}
-    //   containerElement={<div style={{ height: `100vh` }} />}
-    //   mapElement={<div style={{ height: `100%` }} />}
-    // />
-    // <StyledMapWithAnInfoBox/>
-    // <DemoApp/>
-    // <MapWithAMarkerWithLabel
-    //   googleMapURL={
-    //     "https://maps.googleapis.com/maps/api/js?key=" +
-    //     key +
-    //     "&v=3.exp&libraries=geometry,drawing,places"
-    //   }
-    //   loadingElement={<div style={{ height: `100%` }} />}
-    //   containerElement={<div style={{ height: `400px` }} />}
-    //   mapElement={<div style={{ height: `100%` }} />}
-    // />
-    // <MapWithABicyclingLayer />
-    // origin: <Marker noRedraw={true} position={{ lat: 10.752230, lng: 106.627430 }} />,
-    // new google.maps.marmar
-    // destination: new google.maps.LatLng(10.824594, 106.685824),
-    <MapWithADirectionsRenderer />
-    // <MapWithADrawingManager />
-    // <MapWithAFusionTablesLayer/>
-    // <MapWithControlledZoom/>
-    //     <MapWithGroundOverlay
-    //   googleMapURL={googleWith2dot}
-    //   loadingElement={<div style={{ height: `100%` }} />}
-    //   containerElement={<div style={{ height: `400px` }} />}
-    //   mapElement={<div style={{ height: `100%` }} />}
-    // />
-    // <MapWithAMakredInfoWindow
-    //   googleMapURL={googleWith2dot  }
-    //   loadingElement={<div style={{ height: `100%` }} />}
-    //   containerElement={<div style={{ height: `400px` }} />}
-    //   mapElement={<div style={{ height: `100%` }} />}
-    // />
-    // <MapWithAKmlLayer />
-    //     <MapWithAMarker
-    //   googleMapURL={googleWith2dot}
-    //   loadingElement={<div style={{ height: `100%` }} />}
-    //   containerElement={<div style={{ height: `400px` }} />}
-    //   mapElement={<div style={{ height: `100%` }} />}
-    // />
-    // <MapWithAnOverlayView
-    //   googleMapURL={googleWith2dot}
-    //   loadingElement={<div style={{ height: `100%` }} />}
-    //   containerElement={<div style={{ height: `400px` }} />}
-    //   mapElement={<div style={{ height: `100%` }} />}
-    // />
-    // <MapWithASearchBox />
-    // <PlacesWithStandaloneSearchBox/>
+    // <MapTest {...location} />
+    <MapWithADirectionsRenderer
+    fromLat={41.85073}
+    fromLng={-87.65126}
+    toLat={41.85258}
+    toLng={-87.65141}
+    // location={prop.locations}
+  />
+    // <StyledMapWithAnInfoBox />
   );
+  // <CustomMap
+  //   googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+key+"&v=3.exp&libraries=geometry,drawing,places"}
+  //   // AIzaSyAo421sSPdh65qh2f0B08C2U4eU5-pGg4c
+  //   loadingElement={<div style={{ height: `100%` }} />}
+  //   containerElement={<div style={{ height: `100vh` }} />}
+  //   mapElement={<div style={{ height: `100%` }} />}
+  // />
+  // <StyledMapWithAnInfoBox/>
+  // <DemoApp/>
+  // <MapWithAMarkerWithLabel
+  //   googleMapURL={
+  //     "https://maps.googleapis.com/maps/api/js?key=" +
+  //     key +
+  //     "&v=3.exp&libraries=geometry,drawing,places"
+  //   }
+  //   loadingElement={<div style={{ height: `100%` }} />}
+  //   containerElement={<div style={{ height: `400px` }} />}
+  //   mapElement={<div style={{ height: `100%` }} />}
+  // />
+  // <MapWithABicyclingLayer />
+  // origin: <Marker noRedraw={true} position={{ lat: 10.752230, lng: 106.627430 }} />,
+  // new google.maps.marmar
+  // destination: new google.maps.LatLng(10.824594, 106.685824),
+ 
+  // <MapWithADrawingManager />
+  // <MapWithAFusionTablesLayer/>
+  // <MapWithControlledZoom/>
+  //     <MapWithGroundOverlay
+  //   googleMapURL={googleWith2dot}
+  //   loadingElement={<div style={{ height: `100%` }} />}
+  //   containerElement={<div style={{ height: `400px` }} />}
+  //   mapElement={<div style={{ height: `100%` }} />}
+  // />
+  // <MapWithAMakredInfoWindow
+  //   googleMapURL={googleWith2dot  }
+  //   loadingElement={<div style={{ height: `100%` }} />}
+  //   containerElement={<div style={{ height: `400px` }} />}
+  //   mapElement={<div style={{ height: `100%` }} />}
+  // />
+  // <MapWithAKmlLayer />
+  //     <MapWithAMarker
+  //   googleMapURL={googleWith2dot}
+  //   loadingElement={<div style={{ height: `100%` }} />}
+  //   containerElement={<div style={{ height: `400px` }} />}
+  //   mapElement={<div style={{ height: `100%` }} />}
+  // />
+  // <MapWithAnOverlayView
+  //   googleMapURL={googleWith2dot}
+  //   loadingElement={<div style={{ height: `100%` }} />}
+  //   containerElement={<div style={{ height: `400px` }} />}
+  //   mapElement={<div style={{ height: `100%` }} />}
+  // />
+  // <MapWithASearchBox />
+  // <PlacesWithStandaloneSearchBox/>
+  //   );
 }
 
 export default Maps;

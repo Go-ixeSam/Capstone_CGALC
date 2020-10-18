@@ -14,9 +14,12 @@ const initialState = {
     truck: {
       id: "",
       name: "",
+      licensePlatesL: "",
+      weight: "",
       driver: {
         id: "",
         name: "",
+        phone: "",
       },
     },
   },

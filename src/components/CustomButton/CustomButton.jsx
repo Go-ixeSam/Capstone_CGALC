@@ -52,10 +52,7 @@ CustomButton.propTypes = {
  */
 export const MyButton = (argument) => {
   return (
-    <Link
-      // Đây là nơi ta sẽ navigate đến screen tương ứng, đường dẫn link sẽ được truyền tới Admin.jsxjsx
-      to={"/admin/routetrip"}
-    >
+    
       <Button bsStyle={argument.style} onClick={argument.click}>
         {console.log(argument.layout + argument.path)}
         {/* <i className={prop.icon} /> */}
@@ -63,7 +60,7 @@ export const MyButton = (argument) => {
       icon ở file routes.js, vì cái đó đc tạo từ css */}
         {argument.text}
       </Button>
-    </Link>
+    
   );
 };
 

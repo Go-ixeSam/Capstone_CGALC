@@ -21,6 +21,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { CustomFormGroup } from "../components/ByMySelf/Form.js";
 import { Card } from "../components/Card/Card.jsx";
+import { MapTest } from "./Testing_HOC.jsx";
 import routes from "../routes.js";
 import Button from "../components/CustomButton/CustomButton.jsx";
 import {
@@ -147,7 +148,7 @@ class UserProfile extends Component {
         },
         {
           id: "2",
-          name: "Isuzu – Isuzu Nhật Bản",
+          name: "Suzuki – Suzuki Nhật Bản",
           licensePlatesL: "9898-K405657",
           weight: "5",
           driver: {
@@ -172,50 +173,18 @@ class UserProfile extends Component {
     };
   }
 
-  // callAPI = () => {
-  //   axios.get('https://jsonplaceholder.typicode.com/posts')
-  //     .then(response => {
-  //       response.data.map((ele, index) => {
-  //         this.setState(
-  //           {
-  //             posts: this.state.posts.concat(ele)
-
-  //           }
-  //         );
-  //       });
-
-  //     });
-  // };
-
-  // callPostAPI = async (requestData) => {
-
-  //   const post = {
-  //     userId: '55',
-  //     id: '12',
-  //     title: requestData,
-  //     body: 'Ko co g ',
-  //   };
-  //   console.log(post);
-  //   axios.post('https://jsonplaceholder.typicode.com/posts', post)
-  //   .then(response => {
-  //     this.setState({
-  //       postResponse: response.data
-  //     });
-  //   });
-  // }
-
   componentDidMount = () => {
     this.prepareValueForTruckSelect();
   };
 
   prepareValueForTruckSelect = () => {
-    var value = "";
+    var values = {};
     const tmp = [...this.state.truckValue];
     const tripTmp = { ...this.state.trip };
     this.state.trucks.map((obj) => {
-      value = obj.name + " - " + obj.driver.name;
-      tmp.push(value);
-      console.log("value= " + value);
+      values = { id: obj.id, value: obj.name + " - " + obj.driver.name };
+      tmp.push(values);
+      console.log(values);
     });
     tripTmp.truck = this.state.trucks[0]; //Mặc định thì phần tử đầu tiên sẽ được chọn
     this.setState({
@@ -282,11 +251,15 @@ class UserProfile extends Component {
         });
         break;
       case "truck":
+        console.log("Da vao rui và đây là truckID= " + event.target.value);
+        const selectId = event.target.value; //id lấy từ value của options trong select
         this.state.trucks.map((obj) => {
-          if (truckID == obj.id) {
-            tmp.truck = obj;
+          //so sánh id người dùng chọn với id của mảng this.state.trucks
+          if (selectId == obj.id) {
+            tmp.truck = { ...obj };
+            console.log(obj);
             this.setState({
-              trip: tmp,
+              trip: { ...tmp, truck: { ...obj } },
             });
           }
         });
@@ -351,10 +324,19 @@ class UserProfile extends Component {
     });
   };
   render() {
-    // console.log("Trip type= " + this.state.trip.tripType);
-    // console.log("Fuel type= " + this.state.trip.driver.name);
+    // fromLat={41.85073}
+    // fromLng={-87.65126}
+    // toLat={41.85258}
+    // toLng={-87.65141}
+    const props = {
+      fromLat: 41.85073,
+      fromLng: -87.65126,
+      toLat: 41.85258,
+      toLng: -87.65141,
+    };
     return (
       <div className="content">
+        
         {/* <Comment author={userhahahaha} /> */}
         {/* Cái comment dùng để test rằng ta có thể tách code thành component nhỏ như thế nào */}
         <ShowPopUp
@@ -466,19 +448,11 @@ class UserProfile extends Component {
                           info="truck"
                           realValue={this.state.trip.truck.id}
                           truckOptions={this.state.truckValue}
-                          // options={[
-                          //   "Ron95-IV",
-                          //   "Ron95-III",
-                          //   "E5 Ron92-II",
-                          //   "DO 0,001S-V",
-                          //   "DO 0,05S-II",
-                          //   "Dầu hỏa 2-K",
-                          // ]}
                           change={(event) => {
                             this.handle(
                               event,
-                              "truck",
-                              this.state.trip.truck.id
+                              "truck"
+                              // this.state.trip.truck.id
                             );
                           }}
                           labelText={""}
@@ -487,14 +461,19 @@ class UserProfile extends Component {
                       </Row>
                       <Row>
                         <Col xs={12}>
-                          <MyButton
-                            style="info"
-                            fill
-                            type="submit"
-                            // routes={routes}
-                            text="Find routes"
-                            click={(event) => this.submitForm(event)}
-                          />
+                          <Link
+                            // Đây là nơi ta sẽ navigate đến screen tương ứng, đường dẫn link sẽ được truyền tới Admin.jsxjsx
+                            to={"/admin/routetrip"}
+                          >
+                            <MyButton
+                              style="info"
+                              fill
+                              type="submit"
+                              // routes={routes}
+                              text="Find routes"
+                              click={(event) => this.submitForm(event)}
+                            />
+                          </Link>
                         </Col>
                       </Row>
                       <div className="clearfix" />

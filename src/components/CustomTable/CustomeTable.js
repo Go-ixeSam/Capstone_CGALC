@@ -17,7 +17,7 @@ export const CustomTable = (argument) => {
     <div>
       <div className="headerTable">
         {argument.headerItems.map((obj) => {
-          return <TableHeaderItem img={obj.src} text={obj.name} number={1}/>;
+          return <TableHeaderItem img={obj.src} text={obj.name} number={1} />;
         })}
       </div>
       <div>
@@ -31,9 +31,9 @@ export const CustomTable = (argument) => {
                 <TableBodyItem value={obj.estimateCost} />
                 <TableBodyItem value={obj.estimateTime} />
                 {/* <div className="displayFlexRow" style={{ width: "auto" }}> */}
-                  {/* <DecideButton text="Choose" select={true} /> */}
-                  {/* <div style={{ visibility: "hidden" }}>A</div> */}
-                  {/* <DecideButton text="Remove" select={false} /> */}
+                {/* <DecideButton text="Choose" select={true} /> */}
+                {/* <div style={{ visibility: "hidden" }}>A</div> */}
+                {/* <DecideButton text="Remove" select={false} /> */}
                 {/* </div> */}
               </div>
             </div>
@@ -60,16 +60,27 @@ export const TableHeader = () => {
  */
 export const TableHeaderItem = (argument) => {
   var classes = "";
-  var widths="150px";
+  var hidden = "visible";
+  var widths = argument.width; //dựa vào độ dài của dữ liệu ma điều chỉnh đô dài, vd: tên con đường rất dài nên có thể sẽ rất lớn
+
+  //Kiểm tra kiểu chữ
   if (argument.number == 1) {
     classes = "p";
   } else {
     classes = "p-normal";
-    widths="auto"
+  }
+
+  //Một mẹo làm mất element mà ko loại bỏ vị trí của nó trên UI
+  if (argument.show == false) {
+    hidden = "hidden";
   }
   return (
-    <div className="headerItems" style={{width:widths}}>
-      <img className="imageSize" src={argument.img} />
+    <div className="headerItems" style={{ width: widths }}>
+      <img
+        className="imageSize"
+        src={argument.img}
+        style={{ visibility: hidden }}
+      />
       <p className={classes}>{argument.text}</p>
     </div>
   );
