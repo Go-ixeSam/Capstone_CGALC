@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Col, Form, Grid, Row } from "react-bootstrap";
+import { Col, Form, Grid, Row, FormGroup, InputGroup } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { MapTest } from "./Testing_HOC.jsx";
@@ -22,8 +22,12 @@ import weight from "../assets/img/weight.png";
 import route_icon from "../assets/img/route_icon.png";
 import sortingsorting from "../assets/img/icon_ascending_sorting.png";
 import SeperateLine from "../components/formserparate/SeperateLine.js";
-import { MapWithADirectionsRenderer, Maps } from "../views/Maps.jsx";
-import { PrepareData,GetMap } from "../views/Testing_HOC";
+import {
+  MapWithADirectionsRenderer,
+  Maps,
+  MapWithADirectionsRendererSSS,
+} from "../views/Maps.jsx";
+// import { PrepareData, GetMap } from "../views/Testing_HOC";
 import * as actionTypes from "../store/actions";
 import { fueltype, triptype } from "../variables/Variables.jsx";
 import { AxiosMethod } from "../axios.js";
@@ -104,8 +108,11 @@ class RouteTrip extends Component {
         from: start,
         to: end,
         truckid: truckID,
+        weight: 1.1,
       },
+      token: this.props.token,
     };
+
     data.metdasdhod(params).then((result) => {
       console.log(result.data);
       result.data.map((obj) => {
@@ -138,7 +145,7 @@ class RouteTrip extends Component {
 
       this.setState({
         bodyValue: [...tmp], //dữ liệu để hiển thị cho user
-        location: {...tmpLocation }, // toa độ điểm đi và đến
+        location: { ...tmpLocation }, // toa độ điểm đi và đến
       });
     });
   };
@@ -213,6 +220,7 @@ class RouteTrip extends Component {
                             onClick={(e) => this.chooseRoute(obj.order)}
                           >
                             {/* Ta bỏ trực tiếp width vào vì cách map của mảng này duyệt khác với cái header */}
+
                             <TableHeaderItem
                               width={width_50px}
                               img={trip}
@@ -240,7 +248,7 @@ class RouteTrip extends Component {
             </Col>
           </Row>
           <Row>
-            <Col md={7}>
+            <Col md={5}>
               <Card
                 title="Address"
                 content={
@@ -298,44 +306,37 @@ class RouteTrip extends Component {
                       text="Choose a routes"
                       click={this.getRoute}
                     />
-                    <div
-                      style={{
-                        // height: 200,
-                        border: "1px solid black",
-                        marginTop: 30,
-                      }}
-                    >
-                      {/* <Maps /> */}
-                      {/* <MapWithADirectionsRenderer
-                        fromLat={41.85073}
-                        fromLng={-87.65126}
-                        toLat={41.85258}
-                        toLng={-87.65141}
-                        // {...mapLocation}
-                      /> */}
-                      <GetMap {...mapLocation} />
-                      {/* <MapTest fromLat={} toLat={}/> */}
-                    </div>
                   </div>
                 }
               />
             </Col>
-            <Col md={5}>
+            <Col md={7}>
               <Card
                 title="Route details"
                 content={
                   <div style={{ height: 500 - 10 }}>
-                    {/* Ý tưởng là ta sẽ tạo 1 một mảng chứachứa các hướng dẫn rồi show, nó sẽ tự động format cho tata */}
-                    {/* (1) hướng dẫn đàu tiên */}
-                    Rẽ <b>trái</b> tại Cửa Hàng Đtdđ Minh Long vào{" "}
-                    <b>Hẻm 842 Nguyễn Kiệm</b>/<wbr />
-                    <b>Số 21</b>
-                    <div style={{ fontSize: 12 }}>Điểm đến sẽ ở bên phải</div>
-                    {/* (2) hướng dẫn thứ 2 */}
-                    Đi về hướng <b>Tây Bắc</b> lên <b>Đường Nguyễn Văn Nghi</b>{" "}
-                    về phía <b>Lý Thường Kiệt</b>
-                    <div style={{ fontSize: 12 }}>
-                      Đi qua Cửa Hàng Nữ Trang Minh Phát (ở phía bên phải)
+                    <div
+                      style={{
+                        // height: 200,
+                        border: "1px solid black",
+                        // marginTop: 30,
+                      }}
+                    >
+                      {/* <Maps /> */}
+                      <MapWithADirectionsRenderer
+                        // fromLat={41.85073}
+                        // fromLng={-87.65126}
+                        // toLat={41.85258}
+                        // toLng={-87.65141}
+                        {...mapLocation}
+                      />
+                      {/* <GetMap
+                        fromLat={41.85073}
+                        fromLng={-87.65126}
+                        toLat={41.85258}
+                        toLng={-87.65141}
+                      /> */}
+                      {/* <MapTest fromLat={} toLat={}/> */}
                     </div>
                   </div>
                 }
@@ -357,7 +358,8 @@ class RouteTrip extends Component {
 const mapStateToProps = (state) => {
   return {
     fullprofile: state.userprofile,
-    createtripss: state.createtrip,
+    createtripss: state.trip,
+    token: state.user.token,
   };
 };
 

@@ -1,4 +1,4 @@
-import * as actionTypes from '../../store/actions';
+import * as actionTypes from '../actions';
 
 const initialState = {
     account: {
@@ -38,9 +38,4 @@ const userprofile = (state = initialState.accounts, action) => {
     }
 
 };
-// const addArray=()=>{
-//     const newArray=[...this.state.account];
-//     newArray.concat(this.state.account);
-//     return this.accounts=[...newArray];
-// }
 export default userprofile;

@@ -24,21 +24,23 @@ import Maps from "./views/Maps.jsx";
 import Notifications from "./views/Notifications.jsx";
 import Upgrade from "./views/Upgrade.jsx";
 import Order from "./views/Order.jsx";
-import Schedule from "./views/Schedule.jsx";
+// import Schedule from "./views/Schedule.jsx";
 import trip from "./assets/img/trip.png";
 import RouteTrip from "./views/RouteTrip.jsx";
 import MapWithExplain from "./views/Maps_withExplain.jsx";
+import route_icon from "./assets/img/route_icon.png";
+import SignIn from "./SignIn.js"
 
 var number = 1; //Dùng cách này để kiểm tra role của user, vì chỗ này như 1 cái biến thôi nên ta sẽ ko tạo 1 component ở đây. Thay đổi
 // cách để khi đăng nhập vào sẽ mở chức năng tương tự
 const dashboardRoutes = [
-      {
-        path: "/dashboard",
-        name: "Dashboard",
-        icon: "pe-7s-graph",
-        component: Dashboard,
-        layout: "/admin",
-      },
+      // {
+      //   path: "/dashboard",
+      //   name: "Dashboard",
+      //   icon: "pe-7s-graph",
+      //   component: Dashboard,
+      //   layout: "/admin",
+      // },
       {
         path: "/routetrip",
         name: "RouteTrip",
@@ -48,19 +50,25 @@ const dashboardRoutes = [
       },
       {
         // Từ bây h add user sẽ là add trip
-        path: "/user",
+        path: "/trip",
         name: "Create trip",
-        icon: trip,
+        icon: route_icon,
         component: UserProfile,
         layout: "/admin",
       },
-      {
-        path: "/table",
-        name: "User List",
-        icon: "pe-7s-note2",
-        component: TableList,
-        layout: "/admin",
-      },
+      // {
+      //   path: "/login",
+      //   name: "Login",
+      //   component: SignIn,
+      //   layout: "/admin",
+      // },
+      // {
+      //   path: "/table",
+      //   name: "User List",
+      //   icon: "pe-7s-note2",
+      //   component: TableList,
+      //   layout: "/admin",
+      // },
       // {
       //   path: "/order",
       //   name: "Order",
@@ -82,27 +90,27 @@ const dashboardRoutes = [
       //   component: Typography,
       //   layout: "/admin"
       // },
-      {
-        path: "/icons",
-        name: "Icons",
-        icon: "pe-7s-science",
-        component: Icons,
-        layout: "/admin",
-      },
-      {
-        path: "/maps",
-        name: "Maps Aha",
-        icon: "pe-7s-map-marker",
-        component: Maps,
-        layout: "/admin",
-      },
-      {
-        path: "/notifications",
-        name: "Notifications",
-        icon: "pe-7s-bell",
-        component: Notifications,
-        layout: "/admin",
-      },
+      // {
+      //   path: "/icons",
+      //   name: "Icons",
+      //   icon: "pe-7s-science",
+      //   component: Icons,
+      //   layout: "/admin",
+      // },
+      // {
+      //   path: "/maps",
+      //   name: "Maps Aha",
+      //   icon: "pe-7s-map-marker",
+      //   component: Maps,
+      //   layout: "/admin",
+      // },
+      // {
+      //   path: "/notifications",
+      //   name: "Notifications",
+      //   icon: "pe-7s-bell",
+      //   component: Notifications,
+      //   layout: "/admin",
+      // },
       // {
       //   path: "/mapexplain",
       //   name: "Map with explainn",

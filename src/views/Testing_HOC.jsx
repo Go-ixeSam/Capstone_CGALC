@@ -16,6 +16,7 @@ import {
   OverlayView,
 } from "react-google-maps";
 const google = (window.google = window.google ? window.google : {});
+// const DirectionsService = new google.maps.DirectionsService();
 const Testing = ({ direction }) => {
   console.log("Ở Testing");
   console.log(direction);
@@ -30,7 +31,6 @@ const Testing = ({ direction }) => {
 export const PrepareData = (fromLat, fromLng, toLat, toLng) => {
   let tmp = {};
   const DirectionsService = new google.maps.DirectionsService();
-  // var { fromLat, fromLng, toLat, toLng } = location;
   var origin = {
     lat: fromLat,
     lng: fromLng,
@@ -50,7 +50,7 @@ export const PrepareData = (fromLat, fromLng, toLat, toLng) => {
       if (status === google.maps.DirectionsStatus.OK) {
         console.log("Vào thành công");
         console.log(result);
-        tmp = result;
+        tmp = result.route;
       } else {
         console.error(`error fetching directions ${result}`);
       }
@@ -109,41 +109,83 @@ export const MapTest = compose(
   </GoogleMap>
 ));
 
-export const GetMap = compose(
-  withProps({
-    googleMapURL:
-      "https://maps.googleapis.com/maps/api/js?key=" +
-      key +
-      "&v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `200px` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
-  }),
-  withScriptjs,
-  withGoogleMap
-)((props) => (
-  // <PrepareData
-  //   fromLat={props.fromLat}
-  //   fromLng={props.fromLng}
-  //   toLat={props.toLat}
-  //   toLng={props.toLng}
-  // />
-  <GoogleMap defaultZoom={7} defaultCenter={{ lat: -34.397, lng: 150.644 }}>
-    {/* {props.direction &&  */}
-    <DirectionsRenderer
-      directions={PrepareData(
-        props.fromLat,
-        props.fromLng,
-        props.toLat,
-        props.toLng
-      )}
-    />
-    {/* } */}
-    {/* <Marker
-      position={{ lat: -34.397, lng: 150.644 }}
-    /> */}
-  </GoogleMap>
-));
+
+
+// export const GetMap = compose(
+//   withProps({
+//     googleMapURL:
+//       "https://maps.googleapis.com/maps/api/js?key=" +
+//       key +
+//       "&v=3.exp&libraries=geometry,drawing,places",
+//     loadingElement: <div style={{ height: `100%` }} />,
+//     containerElement: <div style={{ height: `200px` }} />,
+//     mapElement: <div style={{ height: `100%` }} />,
+//   }),
+//   withScriptjs,
+//   withGoogleMap,
+//   lifecycle({
+//     componentDidMount() {
+//       const DirectionsService = new google.maps.DirectionsService();
+
+//       var { fromLat, fromLng, toLat, toLng } = this.props;
+//       var origin = { lat: fromLat, lng: fromLng };
+//       var destination = { lat: toLat, lng: toLng };
+//       console.log("Phan component");
+//       console.log(origin);
+//       console.log(destination);
+//       const arr = [];
+
+//       arr.push({
+//         location: new google.maps.LatLng(10.772497, 106.698464),
+//         stopover: true,
+//       }); //Chuẩn bị waypoint
+
+//       DirectionsService.route(
+//         {
+//           origin: origin,
+//           destination: destination,
+//           travelMode: google.maps.TravelMode.DRIVING,
+//         },
+//         (result, status) => {
+//           if (status === google.maps.DirectionsStatus.OK) {
+//             this.setState({
+//               // icons: iconBase,
+//               directions: result,
+//             });
+//           } else {
+//             console.error(`error fetching directions ${result}`);
+//           }
+//         }
+//       );
+//     },
+//   })
+// )((props) => (
+//   // <PrepareData
+//   //   fromLat={props.fromLat}
+//   //   fromLng={props.fromLng}
+//   //   toLat={props.toLat}
+//   //   toLng={props.toLng}
+//   // />
+
+//   <GoogleMap
+//     defaultZoom={7}
+//     defaultCenter={{ lat: props.fromLat, lng: props.fromLng }}
+//   >
+//     {props.directions && (
+//       <DirectionsRenderer
+//         directions={
+//           props.directions
+//           //   PrepareData(
+//           //   props.fromLat,
+//           //   props.fromLng,
+//           //   props.toLat,
+//           //   props.toLng
+//           // )
+//         }
+//       />
+//     )}
+//   </GoogleMap>
+// ));
 
 // export const MapTest = compose(
 //   withProps({
@@ -178,6 +220,59 @@ export const GetMap = compose(
 //         (result, status) => {
 //           if (status === google.maps.DirectionsStatus.OK) {
 //             this.setState({
+//               directions: result,
+//             });
+//           } else {
+//             console.error(`error fetching directions ${result}`);
+//           }
+//         }
+//       );
+//     },
+//   })
+// )((props) => (
+//   <GoogleMap defaultZoom={7}>
+//     {props.directions && <DirectionsRenderer directions={props.directions} />}
+//   </GoogleMap>
+// ));
+// export const GetMap = compose(
+//   withProps({
+//     googleMapURL:
+//       "https://maps.googleapis.com/maps/api/js?key=" +
+//       key +
+//       "&v=3.exp&libraries=geometry,drawing,places",
+//     loadingElement: <div style={{ height: `100%` }} />,
+//     containerElement: <div style={{ height: `200px` }} />,
+//     mapElement: <div style={{ height: `100%` }} />,
+//   }),
+//   withScriptjs,
+//   withGoogleMap,
+//   lifecycle({
+//     componentDidMount() {
+//       const DirectionsService = new google.maps.DirectionsService();
+
+//       var { fromLat, fromLng, toLat, toLng } = this.props;
+//       var origin = { lat: fromLat, lng: fromLng };
+//       var destination = { lat: toLat, lng: toLng };
+//       console.log("Phan component");
+//       console.log(origin);
+//       console.log(destination);
+//       const arr = [];
+
+//       arr.push({
+//         location: new google.maps.LatLng(10.772497, 106.698464),
+//         stopover: true,
+//       }); //Chuẩn bị waypoint
+
+//       DirectionsService.route(
+//         {
+//           origin: origin,
+//           destination: destination,
+//           travelMode: google.maps.TravelMode.DRIVING,
+//         },
+//         (result, status) => {
+//           if (status === google.maps.DirectionsStatus.OK) {
+//             this.setState({
+//               // icons: iconBase,
 //               directions: result,
 //             });
 //           } else {

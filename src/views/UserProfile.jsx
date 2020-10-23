@@ -17,22 +17,21 @@
 */
 import React, { Component } from "react";
 import { Col, Form, Grid, Row } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { CustomFormGroup } from "../components/ByMySelf/Form.js";
 import { Card } from "../components/Card/Card.jsx";
-import { MapTest } from "./Testing_HOC.jsx";
-import routes from "../routes.js";
-import Button from "../components/CustomButton/CustomButton.jsx";
-import {
-  FormRadio,
-  ItemRadio,
-} from "../components/CustomRadio/CustomRadio.jsx";
-import SeperateLine from "../components/formserparate/SeperateLine.js";
-import * as actionTypes from "../store/actions";
-import { fueltype, triptype } from "../variables/Variables.jsx";
 import { MyButton } from "../components/CustomButton/CustomButton.jsx";
+import { CustomInput } from "../components/CustomInput/CustomInput.jsx";
+import SeperateLine from "../components/formserparate/SeperateLine.js";
 import { ShowPopUp } from "../components/Popup/Popup.js";
+import { Helper } from "../helper.js";
+import { getRoute,login } from "../redux";
+import { triptype } from "../variables/Variables.jsx";
+import { tripAPI, loginAPI } from "../api/api";
+import URL from "../api/UrlConstans";
 
 // import avatar from "assets/img/faces/ricado.jpg";
 
@@ -62,6 +61,7 @@ class UserProfile extends Component {
         cityMpg: "",
         highwayMpg: "",
         tankSize: "",
+        datetime: "",
         fuelType: "Ron95-IV",
         truck: {
           id: "",
@@ -75,6 +75,9 @@ class UserProfile extends Component {
           },
         },
       },
+      datetime: new Date(),
+      datetimeValueToAPI: "",
+      weightSelected: "",
       username: "Samnk",
       password: "2511",
       full_name: "Nguyen Khac Sam",
@@ -139,7 +142,7 @@ class UserProfile extends Component {
           id: "1",
           name: "Isuzu – Isuzu Nhật Bản",
           licensePlatesL: "71-C405677",
-          weight: "12",
+          weight: "6",
           driver: {
             id: "1",
             name: "Trần Văn Cầu",
@@ -150,7 +153,7 @@ class UserProfile extends Component {
           id: "2",
           name: "Suzuki – Suzuki Nhật Bản",
           licensePlatesL: "9898-K405657",
-          weight: "5",
+          weight: "6",
           driver: {
             id: "22",
             name: "Thông Tấn XXã",
@@ -158,13 +161,57 @@ class UserProfile extends Component {
           },
         },
         {
-          id: "33",
+          id: "3",
           name: "JAC – Trung Quốc",
           licensePlatesL: "71-S4653911",
-          weight: "6",
+          weight: "12",
           driver: {
             id: "3",
             name: "Ông Bê LắpLắp",
+            phone: "08081508",
+          },
+        },
+        {
+          id: "4",
+          name: "JACFS – Hong Kong 1",
+          licensePlatesL: "71-S46533",
+          weight: "2.5",
+          driver: {
+            id: "3",
+            name: "Hà Văn Ổn",
+            phone: "08081508",
+          },
+        },
+        {
+          id: "5",
+          name: "JAC2 – OSaka",
+          licensePlatesL: "71-S24911",
+          weight: "6",
+          driver: {
+            id: "3",
+            name: "Lê Ô La",
+            phone: "08081508",
+          },
+        },
+        {
+          id: "6",
+          name: "JAC2 – Hong Kong 2",
+          licensePlatesL: "71-S24911da",
+          weight: "2.5",
+          driver: {
+            id: "3",
+            name: "Sasuke",
+            phone: "08081508",
+          },
+        },
+        {
+          id: "7",
+          name: "Trump – Rokcet",
+          licensePlatesL: "71-S24911",
+          weight: "6",
+          driver: {
+            id: "3",
+            name: "Lê Ô La",
             phone: "08081508",
           },
         },
@@ -186,16 +233,49 @@ class UserProfile extends Component {
       tmp.push(values);
       console.log(values);
     });
-    tripTmp.truck = this.state.trucks[0]; //Mặc định thì phần tử đầu tiên sẽ được chọn
+
+    tripTmp.truck = this.state.trucks[0]; //Mặc định xe đầu tiền trong danh sách và tài xế của xe đó được chọn đầu tiên
     this.setState({
-      truckValue: tmp,
       trip: tripTmp,
     });
+
+    // Mặc định xe trọng tải 2.5 tấn là sẽ được hiện trong list select, fleet manager muốn thay đổi thì điền vào ô weight
+    this.updateSelectTruckItem("2.5");
   };
 
   getSelectOption = (event) => {
     this.setState({ myTitle: event.target.value });
     console.log("đây là title: " + this.state.myTitle);
+  };
+
+  /**
+   * Lựa xe dựa trên cân nặng hàng hóa, tiêu chí lựa chọn là dựa trên con số sau dấu
+   */
+  updateSelectTruckItem = (weight) => {
+    let values = {};
+    const truckValueTmp = [];
+    this.state.trucks.map((obj) => {
+      if (weight == obj.weight) {
+        values = { id: obj.id, value: obj.name + " - " + obj.driver.name };
+        truckValueTmp.push(values);
+      }
+
+      //Nếu fleet manager xóa hết dữ liệu trong ô nhập thì những xe 2.5 tấn sẽ đc chon
+      if (weight == "" || weight == null) {
+        if (obj.weight == "2.5") {
+          values = { id: obj.id, value: obj.name + " - " + obj.driver.name };
+          truckValueTmp.push(values);
+        }
+      }
+    });
+    this.setState({
+      truckValue: truckValueTmp,
+    });
+  };
+
+  setTime = (event) => {
+    let time = new Helper();
+    console.log(time.formatTime(event));
   };
 
   handle = (event, fieldName, truckID) => {
@@ -232,6 +312,13 @@ class UserProfile extends Component {
         this.setState({
           trip: { ...tmp, highwayMpg: event.target.value },
         });
+        break;
+      case "Weight":
+        // this.setState({
+        //   weightSelected: { ...tmp, weightSelected: event.target.value },
+        // });
+        //sau khi đa có weight thì tiến hành lựa xe dựa trên weight
+        this.updateSelectTruckItem(event.target.value);
         break;
       case "tankSize":
         // ko còn dùng nữa
@@ -295,15 +382,8 @@ class UserProfile extends Component {
     // event.preventDefault();
     const tmp = { ...this.state.trip };
     // this.props.submitTheForm("Yoho")
-    this.props.submitTheForm(tmp);
-  };
-
-  /**
-   * Dùng để test
-   */
-  clickCaiDitConMeMay = () => {
-    console.log("Click đc rồi địt me");
-    console.log(this.state.password);
+    this.props.getRoute(tmp);
+    // this.props.submitTheForm(tmp);
   };
 
   /**
@@ -323,11 +403,24 @@ class UserProfile extends Component {
       visible: false,
     });
   };
+
+  testLogin=()=>{
+    //   loginAPI.post("http://localhost:44340"+URL.login, {
+    //   Username: 'fleetmanager1',
+    //   Password: '123456',
+    // }).then(resutl=>{
+    //   console.log(resutl.data.token)
+    // })
+    this.props.login("fleetmanager1","123456")
+  }
+ 
   render() {
     // fromLat={41.85073}
     // fromLng={-87.65126}
     // toLat={41.85258}
     // toLng={-87.65141}
+    console.log("Đây là login token= ",this.props.token);
+
     const props = {
       fromLat: 41.85073,
       fromLng: -87.65126,
@@ -336,9 +429,6 @@ class UserProfile extends Component {
     };
     return (
       <div className="content">
-        
-        {/* <Comment author={userhahahaha} /> */}
-        {/* Cái comment dùng để test rằng ta có thể tách code thành component nhỏ như thế nào */}
         <ShowPopUp
           visible={this.state.visible}
           popupContent={this.state.popupConten}
@@ -387,6 +477,22 @@ class UserProfile extends Component {
                           currentValue={this.state.trip.tripType}
                           change={(event) => this.handle(event, "tripType")}
                         />
+                        <Col xs={4}>
+                          <CustomInput
+                            label="Ok"
+                            child={
+                              <DatePicker
+                                selected={this.state.datetime}
+                                className={"form-control"}
+                                showTimeInput
+                                fixedHeight
+                                onChange={(event) => this.setTime(event)}
+                                dateFormat="MM/dd/yyyy h:mm aa"
+                                locale={"vi"}
+                              />
+                            }
+                          />
+                        </Col>
                       </Row>
                       <Row>
                         <SeperateLine text="Truck information" />
@@ -442,6 +548,17 @@ class UserProfile extends Component {
                           labelText={"Fuel Type"}
                           placeholderText={""}
                         /> */}
+
+                        <CustomFormGroup
+                          xsNumber={3}
+                          type="inputnovalidation"
+                          helpblock="Mass: Ton"
+                          change={(event) => {
+                            this.handle(event, "Weight");
+                          }}
+                          labelText={"Weight"}
+                          placeholderText={"2.5"}
+                        />
                         <CustomFormGroup
                           xsNumber={7}
                           type="select"
@@ -449,13 +566,9 @@ class UserProfile extends Component {
                           realValue={this.state.trip.truck.id}
                           truckOptions={this.state.truckValue}
                           change={(event) => {
-                            this.handle(
-                              event,
-                              "truck"
-                              // this.state.trip.truck.id
-                            );
+                            this.handle(event, "truck");
                           }}
-                          labelText={""}
+                          labelText={"Truck"}
                           placeholderText={""}
                         />
                       </Row>
@@ -475,6 +588,11 @@ class UserProfile extends Component {
                             />
                           </Link>
                         </Col>
+                        <Col>
+                         <button onClick={this.testLogin}>
+                           test
+                         </button>
+                        </Col>
                       </Row>
                       <div className="clearfix" />
                     </div>
@@ -490,38 +608,6 @@ class UserProfile extends Component {
                   display: "none",
                 }}
               >
-                {/* <Row>
-                  <div style={{ marginTop: 15, marginLeft: 15 }}>
-                    <h4>Driver</h4>
-                  </div>
-                  <div
-                    style={{
-                      marginLeft: 15,
-                      marginRight: 15,
-                      marginBottom: 15,
-                    }}
-                  >
-                    {this.state.driverList.map((drv) => {
-                      return (
-                        <FormRadio
-                          content={
-                            <ItemRadio
-                              cssClassName={
-                                drv.driver.name == this.state.trip.driver.name
-                                  ? "labelp_green"
-                                  : "labelp"
-                              }
-                              label={drv.driver.name}
-                              change={(event) => {
-                                this.handle(event, "driver");
-                              }}
-                            />
-                          }
-                        />
-                      );
-                    })}
-                  </div>
-                </Row> */}
               </Col>
             </Row>
           </Grid>
@@ -538,24 +624,21 @@ class UserProfile extends Component {
  * @param {} state
  */
 const mapStateToProps = (state) => {
-  // console.log('state.initialState: '+state.initialState);
-  // console.log('state: '+state);
-  // console.log(state.full_name);
-
   return {
     fullprofile: state.userprofile,
-    createtripss: state.createtrip,
+    createtripss: state.trip,
+    token:state.token
   };
 };
 
 //gọi những function tương ứng để xử lí state đưa đến
-const mapDispatchToProps = (dispatch) => {
-  return {
-    submitTheForm: (obj) =>
-      dispatch({
-        type: actionTypes.CREATETRIP,
-        values: obj,
-      }),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     submitTheForm: (obj) =>
+//       dispatch({
+//         type: actionTypes.CREATETRIP,
+//         payload: obj,
+//       }),
+//   };
+// };
+export default connect(mapStateToProps, {getRoute,login})(UserProfile);

@@ -183,7 +183,6 @@ class Admin extends Component {
     messaging
       .getToken()
       .then((currentToken) => {
-       console.log("Day la Token= "+currentToken)
       })
       .catch((err) => {
         console.log("An error occurred while retrieving token. ", err);
@@ -193,18 +192,6 @@ class Admin extends Component {
   };
 
   componentDidMount() {
-    // messaging
-    //   .requestPermission()
-    //   .then(async function () {
-    //     const token = await messaging.getToken();
-    //   })
-    //   .catch(function (err) {
-    //     console.log("Unable to get permission to notify.", err);
-    //   });
-    // navigator.serviceWorker.addEventListener("message", (message) =>
-    //   console.log("Day ne: " + message)
-    // );
-
     this.notifyMe();
 
     // Khai báo 1 notification system ở đây

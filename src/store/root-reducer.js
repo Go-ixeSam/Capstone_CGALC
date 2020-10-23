@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import userprofile from './userprofile.js'
-import createtrip from './createtrip.js'
+import createtrip from './trip/trip.js'
+import userprofile from './user/user.js'
 
 export default combineReducers(
     {

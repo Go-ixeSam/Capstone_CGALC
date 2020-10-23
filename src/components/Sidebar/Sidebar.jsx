@@ -21,7 +21,6 @@ import { routetriplink, isCheck } from "../../variables/Variables.jsx";
 import AdminNavbarLinks from "../Navbars/AdminNavbarLinks.jsx";
 import "../Sidebar/Sidebar.css";
 import logo from "../../assets/img/gas_station_background.png";
-
 class Sidebar extends Component {
   constructor(props) {
     super(props);
@@ -74,6 +73,7 @@ class Sidebar extends Component {
             {/* cái dòng trên là resposive, nếu chiều ngang mà nhỏ hơn 991 thì cái side bar sẽ thu lại */}
             {this.props.routes.map((prop, key) => {
               var li = <li></li>;
+              var imgSize="20%";
               // //Cái dòng trên có tác dụng để dấu đi những cái NavLink chỉ có thể
               // xuất hiện khi nhấp button
               if (prop.layout + prop.path == routetriplink) {
@@ -100,10 +100,11 @@ class Sidebar extends Component {
                         activeClassName="active"
                       >
                         {/* {console.log(prop.layout + prop.path)} */}
-                        <i className={prop.icon} />
+                        {/* <i className={prop.icon} /> */}
+                        <img src={prop.icon} style={{width:imgSize,height:imgSize,display:"inline-block"}} />
                         {/* Nếu muốn dùng mấy icon dạng png thì thay cái <i> bằng <img>, và đổi lại hết đống
                       icon ở file routes.js, vì cái đó đc tạo từ css */}
-                        <p>{prop.name}</p>
+                        <p style={{display:"inline-block",marginLeft:5}}>{prop.name}</p>
                       </NavLink>
                     </li>
                   );

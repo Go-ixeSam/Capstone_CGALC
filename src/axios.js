@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { projectAPIToken } from "./variables/Variables.jsx";
-
+import { connect } from "redux";
 const axios = require("axios").default; //Tạo 1 axios instance
 axios.defaults.headers.common = { Authorization: `Bearer ${projectAPIToken}` }; //Dòng này để config header chung cho toàn bộ requestrequest
 axios.defaults.baseURL = "http://localhost:44340/api"; //Gắn base url mặc định, khỏi phải viết đi viết lại nhiều lần
@@ -14,17 +14,18 @@ export class AxiosMethod {
    * @param {*} argument
    */
   async metdasdhod(argument) {
-    const { url, parameter, type } = argument;
+    const { url, parameter, type, token } = argument;
     var response = {};
     switch (type) {
       case "get":
         response = await axios.get(url, {
           params: parameter,
+          headers: { Authorization: "Bearer " + token },
         });
         // console.log(response);
         break;
       case "post":
-        response = await axios.post(url, null,{
+        response = await axios.post(url, null, {
           params: parameter,
         });
         break;

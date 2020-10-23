@@ -1,4 +1,4 @@
-import * as actionTypes from "../../store/actions";
+import * as actionTypes from "../actions";
 
 const initialState = {
   trip: {
@@ -32,11 +32,6 @@ const createtrip = (state = initialState.trip, action) => {
     case actionTypes.CREATETRIP:
       return {
         ...state,trip:action.values
-        // startingLocation: action.startingLocation,
-        // startingLocation: startingLocation,
-        // destination: destination,
-        // tripType: tripType,
-        // truck: truck,
       };
       break;
     default:

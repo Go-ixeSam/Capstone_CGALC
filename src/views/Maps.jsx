@@ -46,6 +46,7 @@ import { FaAnchor } from "react-icons/fa";
 //Cái biểu tượng mỏ neo, và trang này còng nhiều biểu tượng nữa cơcơ
 import MarkerWithLabel from "react-google-maps/lib/components/addons/MarkerWithLabel";
 import DrawingManager from "react-google-maps/lib/components/drawing/DrawingManager";
+import { FALSE } from "node-sass";
 const {
   StandaloneSearchBox,
 } = require("react-google-maps/lib/components/places/StandaloneSearchBox");
@@ -284,7 +285,35 @@ const MapWithABicyclingLayer = compose(
  * @param {*} param0
  */
 
-export const MapWithADirectionsRenderer = compose(
+export const PrepareData = ({ fromLat, fromLng, toLat, toLng }) => {
+  let tmp = <div />;
+  const DirectionsService = new google.maps.DirectionsService();
+  var origin = { lat: fromLat, lng: fromLng };
+  var destination = { lat: toLat, lng: toLng };
+  console.log("Phan component");
+  console.log(origin);
+  console.log(destination);
+
+  DirectionsService.route(
+    {
+      origin: origin,
+      destination: destination,
+      travelMode: google.maps.TravelMode.DRIVING,
+    },
+    (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        console.log("Vào thành công");
+        console.log(result);
+        tmp = result;
+      } else {
+        console.error(`error fetching directions ${result}`);
+      }
+    }
+  );
+  return <Mapss result={tmp} />;
+};
+
+export const MapWithADirectionsRendererSSS = compose(
   withProps({
     googleMapURL:
       "https://maps.googleapis.com/maps/api/js?key=" +
@@ -295,27 +324,71 @@ export const MapWithADirectionsRenderer = compose(
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withScriptjs,
+  withGoogleMap
+)((props) => (
+  <PrepareData
+    fromLat={props.fromLat}
+    fromLng={props.fromLng}
+    toLat={props.toLat}
+    toLng={props.toLng}
+  />
+));
+
+export const Mapss = compose(
+  withProps({
+    googleMapURL:
+      "https://maps.googleapis.com/maps/api/js?key=" +
+      key +
+      "&v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: `300px` }} />,
+    mapElement: <div style={{ height: `100%` }} />,
+  }),
+  withScriptjs,
+  withGoogleMap
+)((props) => (
+  <GoogleMap defaultZoom={7}>
+    {props.result && <DirectionsRenderer directions={props.result} />}
+  </GoogleMap>
+));
+export const MapWithADirectionsRenderer = compose(
+  withProps({
+    googleMapURL:
+      "https://maps.googleapis.com/maps/api/js?key=" +
+      key +
+      "&v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: `300px` }} />,
+    mapElement: <div style={{ height: `100%` }} />,
+  }),
+  withScriptjs,
   withGoogleMap,
   lifecycle({
-    componentDidMount() {
+    componentDidMount() {},
+    shouldComponentUpdate(nextProps, nextState) {
+      console.log("next props: ", nextProps);
+      var { fromLat, fromLng, toLat, toLng } = this.props;
+      var { fLat, fLng, tLat, tLng } = nextProps;
+
+      if (
+        fromLat == fLat &&
+        fromLng == fLng &&
+        toLat == tLat &&
+        toLng == tLng
+      ) {
+        return false;
+      }
+      return true;
+    },
+    componentDidUpdate() {
       const DirectionsService = new google.maps.DirectionsService();
 
       var { fromLat, fromLng, toLat, toLng } = this.props;
-      var origin = {
-        lat: fromLat,
-        lng: fromLng,
-      };
+      var origin = { lat: fromLat, lng: fromLng };
       var destination = { lat: toLat, lng: toLng };
       console.log("Phan component");
       console.log(origin);
       console.log(destination);
-
-      var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
-      var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(10.750073, 106.631325),
-        map: google.maps,
-        icon: fromm,
-      });
       const arr = [];
 
       arr.push({
@@ -326,16 +399,15 @@ export const MapWithADirectionsRenderer = compose(
       DirectionsService.route(
         {
           origin: origin,
-          // origin: new google.maps.LatLng(fromLat, fromLng),
           destination: destination,
-          // destination: new google.maps.LatLng(toLat, toLng),
-          // waypoints: arr,
           travelMode: google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
           if (status === google.maps.DirectionsStatus.OK) {
+            console.log(result);
             this.setState({
-              icons: iconBase,
+              // icons: iconBase,
+
               directions: result,
             });
           } else {
@@ -347,6 +419,7 @@ export const MapWithADirectionsRenderer = compose(
   })
 )((props) => (
   <GoogleMap defaultZoom={7}>
+    {/* {props.directions && <DirectionsRenderer directions={props.directions} />} */}
     {props.directions && <DirectionsRenderer directions={props.directions} />}
   </GoogleMap>
 ));
@@ -830,12 +903,12 @@ export function Maps(prop) {
   return (
     // <MapTest {...location} />
     <MapWithADirectionsRenderer
-    fromLat={41.85073}
-    fromLng={-87.65126}
-    toLat={41.85258}
-    toLng={-87.65141}
-    // location={prop.locations}
-  />
+      fromLat={41.85073}
+      fromLng={-87.65126}
+      toLat={41.85258}
+      toLng={-87.65141}
+      // location={prop.locations}
+    />
     // <StyledMapWithAnInfoBox />
   );
   // <CustomMap
@@ -861,7 +934,7 @@ export function Maps(prop) {
   // origin: <Marker noRedraw={true} position={{ lat: 10.752230, lng: 106.627430 }} />,
   // new google.maps.marmar
   // destination: new google.maps.LatLng(10.824594, 106.685824),
- 
+
   // <MapWithADrawingManager />
   // <MapWithAFusionTablesLayer/>
   // <MapWithControlledZoom/>

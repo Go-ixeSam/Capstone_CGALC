@@ -8,6 +8,7 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
+  HelpBlock
 } from "react-bootstrap";
 
 import { getValidationState } from "../ByMySelf/InputValidation.js";
@@ -37,6 +38,25 @@ export const CustomFormGroup = (argument) => {
                 defaultValue={argument.defaultValue}
                 onChange={argument.change}
               />
+              <HelpBlock>{argument.helpblock}</HelpBlock>
+            </FormGroup>
+          </div>
+        </Col>
+      );
+      break;
+    case "inputnovalidation":
+      return (
+        <Col xs={argument.xsNumber}>
+          <div>
+            <FormGroup>
+              <label>{argument.labelText}</label>
+              <FormControl
+                required
+                placeholder={argument.placeholderText}
+                defaultValue={argument.defaultValue}
+                onChange={argument.change}
+              />
+              <HelpBlock>{argument.helpblock}</HelpBlock>
             </FormGroup>
           </div>
         </Col>
