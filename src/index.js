@@ -35,21 +35,16 @@ import SignIn from "../src/SignUp.js";
 import TripRoute from "./views/RouteTrip.jsx";
 import Noti from "./views/Notifications.jsx";
 import AdminLayout from "../src/layouts/Admin.jsx";
-// const store = createStore(reducers);
-const store = createStore(rootReducer, composeWithDevTools());
-
+import App from "./App.js";
+import store from "./redux/store.js";
 ReactDOM.render(
   <Provider store={store}>
-    {/* Đây là nơi mà sẽ render ra giao diện tùy ứng theo đường dẫndẫn */}
     <BrowserRouter>
-      <Switch>
-        {/* Mặc định load trang thì admin layout sẽ được load */}
-        <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-        {/* Sau khi admin layout load  thì screen dashboard sẽ được chạy trước */}
-        <Redirect from="/" to="/admin/dashboard" />
-      </Switch>
+      {/* <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+        <Redirect from="/" to="/admin/trip" /> */}
+        <App />
     </BrowserRouter>
-    , //{" "}
+    {/* , //{" "} */}
   </Provider>,
   document.getElementById("root")
 );

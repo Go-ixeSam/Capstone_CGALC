@@ -279,8 +279,8 @@ const baseUrl="";
 const CLASS="";
 const routetriplink="/admin/routetrip";
 const firebaseToken="e01y43_6_pR9jAhHlZmxLu:APA91bHLrZOXkyJLcRtR6TxltEcqFZ8LOoL3ZIzCSjOcL-bs1ZpeiYLgDtDAdzJ8xQALo_YTx0NqyCSH7PZdMPwe23oeXUaTUI-i5s55j-gagHM2zwAtXV6Ge3KYGaQy2iyytOtUgjW-";
-const projectAPIToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImZsZWV0bWFuYWdlcjEiLCJVc2VySWQiOiJkZWRmZTc0Ni0wNDdlLTRmNjEtYWVkMy0zZTQwMDVmMTJmZWMiLCJuYmYiOjE2MDI4NDU5OTIsImV4cCI6MTYwMzEwNTE5MiwiaWF0IjoxNjAyODQ1OTkyfQ.RI999G3mu7wLijSK9UrJRY5FIKLb29D92fm0hOLJCiU";
-
+const projectAPIToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImZsZWV0bWFuYWdlcjEiLCJVc2VySWQiOiJkZWRmZTc0Ni0wNDdlLTRmNjEtYWVkMy0zZTQwMDVmMTJmZWMiLCJuYmYiOjE2MDM0OTE1OTMsImV4cCI6MTYwMzc1MDc5MywiaWF0IjoxNjAzNDkxNTkzfQ.48AI6wT-AZLeiie05we1ovEo-QwS-3P-elIX4RHuIFA";
+const AcessToken="access-token";
 
 //Đây là nơi chứa dữ liệu giả của template
 const tdArray = [
@@ -639,5 +639,6 @@ module.exports = {
   baseUrl,
   CLASS,
   projectAPIToken,
+  AcessToken,
   legendBar // For charts (Dashboard view)
 };

@@ -16,7 +16,7 @@
 
 */
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch ,Redirect} from "react-router-dom";
 import NotificationSystem from "react-notification-system";
 
 import AdminNavbar from "../components/Navbars/AdminNavbar";
@@ -27,7 +27,7 @@ import { style, primaryColor, yellowColor } from "../variables/Variables.jsx";
 import routes from "../routes.js";
 import image from "../assets/img/sidebar-3.jpg";
 import { messaging } from "../init-fcm";
-import  Notifications  from "../views/Notifications.jsx";
+// import Notifications from "../views/Notifications.jsx";
 
 console.log("màu đây: " + primaryColor);
 
@@ -93,13 +93,7 @@ class Admin extends Component {
           route = (
             <Route
               path={prop.layout + prop.path}
-              //path: Tên đường dẫn
               render={(props) => (
-                /**
-                 * render={(props), kĩ thuật render props
-                 * ngay tại lúc này, khi 1 page đc layout thì đồng thời sẽ render ra
-                 * một notification luônluôn
-                 */
                 <prop.component
                   {...props}
                   handleClick={this.handleNotificationClick}
@@ -160,7 +154,7 @@ class Admin extends Component {
       // <Notifications
       // handleClick={this.handleNotificationClick("trtr")}
       // />
-      this.getCurrentToken()
+      this.getCurrentToken();
     }
 
     // Otherwise, we need to ask the user for permission
@@ -169,7 +163,7 @@ class Admin extends Component {
         // If the user accepts, let's create a notification
         if (permission === "granted") {
           var notification = new Notification("Hi there!");
-          this.getCurrentToken()
+          // this.getCurrentToken()
         }
       });
     }
@@ -183,7 +177,7 @@ class Admin extends Component {
     messaging
       .getToken()
       .then((currentToken) => {
-       console.log("Day la Token= "+currentToken)
+        console.log("Day la Token= " + currentToken);
       })
       .catch((err) => {
         console.log("An error occurred while retrieving token. ", err);
@@ -193,20 +187,7 @@ class Admin extends Component {
   };
 
   componentDidMount() {
-    // messaging
-    //   .requestPermission()
-    //   .then(async function () {
-    //     const token = await messaging.getToken();
-    //   })
-    //   .catch(function (err) {
-    //     console.log("Unable to get permission to notify.", err);
-    //   });
-    // navigator.serviceWorker.addEventListener("message", (message) =>
-    //   console.log("Day ne: " + message)
-    // );
-
     this.notifyMe();
-
     // Khai báo 1 notification system ở đây
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
@@ -267,8 +248,6 @@ class Admin extends Component {
           routes={routes}
           // Nhận vào một mảng route
           image={this.state.image}
-          // color={primaryColor}
-          // color={"#EB5757"}
           hasImage={this.state.hasImage}
         />
         <div id="main-panel" className="main-panel" ref="mainPanel">
@@ -276,7 +255,10 @@ class Admin extends Component {
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
           />
-          <Switch>{this.getRoutes(routes)}</Switch>
+          <Switch>
+            {this.getRoutes(routes)}
+            <Redirect to="/admin/trip" />
+          </Switch>
           {/* Cai phan nay danh co navBar, la cai bar o tren top */}
           {/* Switch đây là chỗ sẽ đưa ta đến page cần đến dựa vào cái path đc cung cấp */}
           <Footer />

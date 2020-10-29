@@ -62,11 +62,7 @@ class Sidebar extends Component {
               <img src={logo} alt="logo_image" />
             </div>
           </a>
-          <a
-            className="simple-text logo-normal"
-          >
-            Cheap Gas Station
-          </a>
+          <a className="simple-text logo-normal">Cheapest trip cost</a>
         </div>
         <div className="sidebar-wrapper">
           <ul className="nav">
@@ -74,8 +70,10 @@ class Sidebar extends Component {
             {/* cái dòng trên là resposive, nếu chiều ngang mà nhỏ hơn 991 thì cái side bar sẽ thu lại */}
             {this.props.routes.map((prop, key) => {
               var li = <li></li>;
-              // //Cái dòng trên có tác dụng để dấu đi những cái NavLink chỉ có thể
-              // xuất hiện khi nhấp button
+              var imgSize="20%";
+
+              //Cái dòng trên có tác dụng để dấu đi những cái NavLink chỉ có thể
+              // xuất hiện khi nhấp button "Find routes"
               if (prop.layout + prop.path == routetriplink) {
                 li = <li display="none" />;
               } else {
@@ -93,17 +91,23 @@ class Sidebar extends Component {
                     và đéo nên quan tâmtâm
                     */}
                       <NavLink
-                        // display="none"
-                        // Đây là nơi ta sẽ navigate đến screen tương ứng, đường dẫn link sẽ được truyền tới Admin.jsxjsx
                         to={prop.layout + prop.path}
                         className="nav-link"
                         activeClassName="active"
                       >
-                        {/* {console.log(prop.layout + prop.path)} */}
-                        <i className={prop.icon} />
-                        {/* Nếu muốn dùng mấy icon dạng png thì thay cái <i> bằng <img>, và đổi lại hết đống
-                      icon ở file routes.js, vì cái đó đc tạo từ css */}
-                        <p>{prop.name}</p>
+                        {/* <i className={prop.icon} />
+                        <p>{prop.name}</p> */}
+                        <img
+                          src={prop.icon}
+                          style={{
+                            width: imgSize,
+                            height: imgSize,
+                            display: "inline-block",
+                          }}
+                        />
+                        <p style={{ display: "inline-block", marginLeft: 5 }}>
+                          {prop.name}
+                        </p>
                       </NavLink>
                     </li>
                   );

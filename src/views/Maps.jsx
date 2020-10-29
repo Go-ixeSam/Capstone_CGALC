@@ -297,25 +297,39 @@ export const MapWithADirectionsRenderer = compose(
   withScriptjs,
   withGoogleMap,
   lifecycle({
-    componentDidMount() {
+    // shouldComponentUpdate(nextProps, nextState) {
+    //   // console.log("next props: ", nextProps);
+    //   var { fromLat, fromLng, toLat, toLng, count } = this.props;
+    //   var fLat = nextProps.fromLat;
+    //   var fLng = nextProps.fromLng;
+    //   var tLat = nextProps.toLat;
+    //   var tLng = nextProps.toLng;
+
+    //   console.log("this props: ", this.props);
+    //   console.log("next props: ", nextProps);
+
+    //   if (
+    //     fromLat !== fLat &&
+    //     fromLng !== fLng &&
+    //     toLat !== tLat &&
+    //     toLng !== tLng
+    //   ) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    componentDidUpdate(prevProp, prevState) {
+      console.log("this props: ", this.props);
+      console.log("prev props: ", prevProp);
       const DirectionsService = new google.maps.DirectionsService();
 
       var { fromLat, fromLng, toLat, toLng } = this.props;
-      var origin = {
-        lat: fromLat,
-        lng: fromLng,
-      };
+      var origin = { lat: fromLat, lng: fromLng };
       var destination = { lat: toLat, lng: toLng };
-      console.log("Phan component");
-      console.log(origin);
-      console.log(destination);
-
-      var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
-      var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(10.750073, 106.631325),
-        map: google.maps,
-        icon: fromm,
-      });
+      // console.log("Phan component");
+      // console.log(origin);
+      // console.log(destination);
       const arr = [];
 
       arr.push({
@@ -326,16 +340,13 @@ export const MapWithADirectionsRenderer = compose(
       DirectionsService.route(
         {
           origin: origin,
-          // origin: new google.maps.LatLng(fromLat, fromLng),
           destination: destination,
-          // destination: new google.maps.LatLng(toLat, toLng),
-          // waypoints: arr,
           travelMode: google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
           if (status === google.maps.DirectionsStatus.OK) {
+            console.log(result);
             this.setState({
-              icons: iconBase,
               directions: result,
             });
           } else {
@@ -830,12 +841,12 @@ export function Maps(prop) {
   return (
     // <MapTest {...location} />
     <MapWithADirectionsRenderer
-    fromLat={41.85073}
-    fromLng={-87.65126}
-    toLat={41.85258}
-    toLng={-87.65141}
-    // location={prop.locations}
-  />
+      fromLat={41.85073}
+      fromLng={-87.65126}
+      toLat={41.85258}
+      toLng={-87.65141}
+      // location={prop.locations}
+    />
     // <StyledMapWithAnInfoBox />
   );
   // <CustomMap
@@ -861,7 +872,7 @@ export function Maps(prop) {
   // origin: <Marker noRedraw={true} position={{ lat: 10.752230, lng: 106.627430 }} />,
   // new google.maps.marmar
   // destination: new google.maps.LatLng(10.824594, 106.685824),
- 
+
   // <MapWithADrawingManager />
   // <MapWithAFusionTablesLayer/>
   // <MapWithControlledZoom/>

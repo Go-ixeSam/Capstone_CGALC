@@ -8,6 +8,7 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
+  HelpBlock
 } from "react-bootstrap";
 
 import { getValidationState } from "../ByMySelf/InputValidation.js";
@@ -26,7 +27,7 @@ export const CustomFormGroup = (argument) => {
           <div>
             <FormGroup
               validationState={getValidationState(
-                argument.realValue,//day la biến dùng để check validation
+                argument.realValue, //day la biến dùng để check validation
                 lengthError
               )}
             >
@@ -37,6 +38,24 @@ export const CustomFormGroup = (argument) => {
                 defaultValue={argument.defaultValue}
                 onChange={argument.change}
               />
+            </FormGroup>
+          </div>
+        </Col>
+      );
+      break;
+    case "inputnovalidation":
+      return (
+        <Col xs={argument.xsNumber}>
+          <div>
+            <FormGroup>
+              <label>{argument.labelText}</label>
+              <FormControl
+                required
+                placeholder={argument.placeholderText}
+                defaultValue={argument.defaultValue}
+                onChange={argument.change}
+              />
+              <HelpBlock>{argument.helpblock}</HelpBlock>
             </FormGroup>
           </div>
         </Col>
@@ -62,7 +81,11 @@ export const CustomFormGroup = (argument) => {
               value={argument.currentValue}
             >
               {itemOption.map((opt) => {
-                return <option value={opt.id?opt.id:opt}>{opt.value?opt.value:opt}</option>;
+                return (
+                  <option value={opt.id ? opt.id : opt}>
+                    {opt.value ? opt.value : opt}
+                  </option>
+                );
                 //Dòng value có nghĩa là những loại select có id thì value sẽ để id,
                 // còn ko thì để giá trị mặc định
                 //opt.value cũng vậy

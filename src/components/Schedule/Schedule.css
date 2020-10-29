@@ -549,8 +549,10 @@
 .react-datepicker__quarter-text--in-selecting-range,
 .react-datepicker__quarter-text--in-range {
   border-radius: 0.3rem;
-  background-color: coral;
+  background-color: #34CBA7;
   color: #fff;
+  width: 20px;
+  height:20px;
 }
 
 .react-datepicker__day--selected:hover, .react-datepicker__day--in-selecting-range:hover, .react-datepicker__day--in-range:hover,

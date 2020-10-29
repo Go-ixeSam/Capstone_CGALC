@@ -1,42 +1,35 @@
 import React, { Component } from "react";
-import { Col, Form, Grid, Row } from "react-bootstrap";
+import { Col, Grid, Row } from "react-bootstrap";
+import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { MapTest } from "./Testing_HOC.jsx";
-import { CustomFormGroup } from "../components/ByMySelf/Form.js";
-import { Card } from "../components/Card/Card.jsx";
-import Button from "../components/CustomButton/CustomButton.jsx";
-import {
-  FormRadio,
-  ItemRadio,
-} from "../components/CustomRadio/CustomRadio.jsx";
-import { MyButton } from "../components/CustomButton/CustomButton.jsx";
-import time from "../assets/img/time.png";
+import driver from "../assets/img/driver-icon.png";
+import direction from "../assets/img/icons8-direction-64.png";
+import sortingsorting from "../assets/img/icon_ascending_sorting.png";
 import trip from "../assets/img/icon_estimate.png";
 import fromm from "../assets/img/icon_from_55.png";
-import to from "../assets/img/icon_to_55.png";
-import driver from "../assets/img/driver-icon.png";
 import phone from "../assets/img/icon_phone.png";
-import truck from "../assets/img/truck.png";
-import weight from "../assets/img/weight.png";
+import to from "../assets/img/icon_to_55.png";
 import route_icon from "../assets/img/route_icon.png";
-import sortingsorting from "../assets/img/icon_ascending_sorting.png";
-import SeperateLine from "../components/formserparate/SeperateLine.js";
-import { MapWithADirectionsRenderer, Maps } from "../views/Maps.jsx";
-import { PrepareData,GetMap } from "../views/Testing_HOC";
-import * as actionTypes from "../store/actions";
-import { fueltype, triptype } from "../variables/Variables.jsx";
+import truck from "../assets/img/truck.png";
+import { Helper } from "../helper";
+import weight from "../assets/img/weight.png";
 import { AxiosMethod } from "../axios.js";
-import {
-  CustomTable,
-  TableHeader,
-  TableHeaderItem,
-  TableBodyItem,
-} from "../components/CustomTable/CustomeTable.js";
+import { Card } from "../components/Card/Card.jsx";
+import { MyButton } from "../components/CustomButton/CustomButton.jsx";
+import { CustomInput } from "../components/CustomInput/CustomInput.jsx";
+import { TableHeaderItem } from "../components/CustomTable/CustomeTable.js";
+import SeperateLine from "../components/formserparate/SeperateLine.js";
+import { MapWithADirectionsRenderer } from "../views/Maps.jsx";
+import { instanceOf } from "prop-types";
+import { AcessToken } from "../variables/Variables";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
+
 class RouteTrip extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      route: [],
       selectedId: "",
       headerItemsss: [
         {
@@ -47,6 +40,10 @@ class RouteTrip extends Component {
           src: route_icon,
           name: "Sumary",
         },
+        {
+          src: trip,
+          name: "Estimate Cost",
+        },
         // {
         //   src: trip,
         //   name: "Estimate Cost",
@@ -56,16 +53,14 @@ class RouteTrip extends Component {
         //   name: "Estimate Time",
         // },
       ],
+      datetime: new Date(),
+      dateValue: "",
       bodyValue: [],
       location: {
-        from: {
-          fromLat: 0,
-          fromLng: 0,
-        },
-        to: {
-          toLat: 0,
-          toLng: 0,
-        },
+        fromLat: 0,
+        fromLng: 0,
+        toLat: 0,
+        toLng: 0,
       },
       // from: { fromLat: 41.85073, fromLng: -87.65126 },
       // to: { toLat: 41.85258, toLng: -87.65141 },
@@ -74,11 +69,14 @@ class RouteTrip extends Component {
 
   componentDidMount = () => {
     //Lấy dữ liệu đường đi về
+    cookies.set(AcessToken, this.props.userData, { path: "/" });
+
     const tripInfo = this.props.createtripss.trip;
     this.getRoute(
       tripInfo.startingLocation,
       tripInfo.destination,
-      tripInfo.truck.id
+      tripInfo.truck.id,
+      tripInfo.truck.weight
     );
   };
 
@@ -92,9 +90,18 @@ class RouteTrip extends Component {
     });
   };
 
-  getRoute = (start, end, truckID) => {
+  setTime = (event) => {
+    let time = new Helper();
+    console.log(time.formatTime(event));
+    this.setState({
+      datetime: event,
+    });
+  };
+
+  getRoute = (start, end, truckID, weight) => {
     const data = new AxiosMethod();
     const tmp = [...this.state.bodyValue];
+    let arr = [];
     // const tmpLocation = {};
     var orderNumber = 0;
     const params = {
@@ -104,14 +111,25 @@ class RouteTrip extends Component {
         from: start,
         to: end,
         truckid: truckID,
+        weight: weight,
       },
     };
     data.metdasdhod(params).then((result) => {
       console.log(result.data);
+      let route = {
+        order: 0,
+      }; // phần tử chứa order và route
+      // arr = [...result.data];
       result.data.map((obj) => {
         orderNumber++;
         const sumary = obj.route.summary;
-        tmp.push({ order: orderNumber, summary: sumary });
+        const estimateCost = obj.estimatedCost;
+
+        tmp.push({
+          order: orderNumber,
+          summary: sumary,
+          estimateCost: estimateCost,
+        });
       });
 
       const legs = result.data[0].route.legs;
@@ -122,31 +140,26 @@ class RouteTrip extends Component {
       console.log(firstChild.startLocation.latitude);
 
       const tmpLocation = {
-        from: {
-          fromLat: firstChild.startLocation.latitude,
-          fromLng: firstChild.startLocation.longitude,
-        },
-        to: {
-          toLat: firstChild.endLocation.latitude,
-          toLng: firstChild.endLocation.longitude,
-        },
+        fromLat: firstChild.startLocation.latitude,
+        fromLng: firstChild.startLocation.longitude,
+        toLat: firstChild.endLocation.latitude,
+        toLng: firstChild.endLocation.longitude,
       };
-      // tmpLocation.from.fromLat = firstChild.startLocation.latitude;
-      // tmpLocation.from.fromLng = firstChild.startLocation.longitude;
-      // tmpLocation.to.toLat = firstChild.endLocation.latitude;
-      // tmpLocation.to.toLng = firstChild.endLocation.longitude;
 
       this.setState({
         bodyValue: [...tmp], //dữ liệu để hiển thị cho user
-        location: {...tmpLocation }, // toa độ điểm đi và đến
+        location: { ...tmpLocation }, // toa độ điểm đi và đến
+        // route: [...arr],
       });
     });
   };
   render() {
     // Ta có thể viết detructing như ở dưới
+    console.log("Cookie ne: ",cookies.get(AcessToken));
     const {
       startingLocation,
       destination,
+      tripType,
       driverName = this.props.createtripss.trip.truck.driver.name,
       truckName = this.props.createtripss.trip.truck.name,
       truckWWeight = this.props.createtripss.trip.truck.weight,
@@ -157,22 +170,27 @@ class RouteTrip extends Component {
     //2 biến dưới dùng cho xác định chiều dài dữ liệu
     const width_50px = "50px";
     const width_300px = "300px";
-    let mapLocation = {
-      fromLat: 0,
-      fromLng: 0,
-      toLat: 0,
-      toLng: 0,
-    };
-    if (this.state.location.from.fromLat != 0) {
-      const { fromLat, fromLng } = { ...this.state.location.from };
-      const { toLat, toLng } = { ...this.state.location.to };
-      mapLocation = {
-        fromLat: fromLat,
-        fromLng: fromLng,
-        toLat: toLat,
-        toLng: toLng,
-      };
-    }
+    const width_130px = "130px";
+    var count = 0;
+    // let mapLocation = {
+    //   fromLat: 0,
+    //   fromLng: 0,
+    //   toLat: 0,
+    //   toLng: 0,
+    //   count: count,
+    // };
+    // if (this.state.location.from.fromLat != 0) {
+    //   const { fromLat, fromLng } = { ...this.state.location.from };
+    //   const { toLat, toLng } = { ...this.state.location.to };
+    //   count = count + 1;
+    //   mapLocation = {
+    //     fromLat: fromLat,
+    //     fromLng: fromLng,
+    //     toLat: toLat,
+    //     toLng: toLng,
+    //     count: count,
+    //   };
+    // }
     return (
       <div className="content">
         <Grid fluid>
@@ -189,6 +207,8 @@ class RouteTrip extends Component {
                           width = width_50px;
                         } else if (index == 1) {
                           width = width_300px;
+                        } else if (index == 2) {
+                          width = width_130px;
                         }
                         return (
                           <TableHeaderItem
@@ -227,6 +247,13 @@ class RouteTrip extends Component {
                               text={obj.summary}
                               number={0}
                             />
+                            <TableHeaderItem
+                              width={width_130px}
+                              img={trip}
+                              show={false}
+                              text={obj.estimateCost}
+                              number={0}
+                            />
                           </div>
                         </div>
                       );
@@ -240,7 +267,7 @@ class RouteTrip extends Component {
             </Col>
           </Row>
           <Row>
-            <Col md={7}>
+            <Col md={5}>
               <Card
                 title="Address"
                 content={
@@ -256,6 +283,12 @@ class RouteTrip extends Component {
                     <TableHeaderItem
                       img={to}
                       text={destination}
+                      number={2}
+                      width={"auto"}
+                    />
+                    <TableHeaderItem
+                      img={direction}
+                      text={tripType}
                       number={2}
                       width={"auto"}
                     />
@@ -283,6 +316,25 @@ class RouteTrip extends Component {
                       number={2}
                     />
                     <TableHeaderItem img={phone} text={"08081508"} number={2} />
+                    <SeperateLine
+                      changeMargin={true}
+                      number={0}
+                      text="Time start"
+                    />
+                    <CustomInput
+                      // label="Ok"
+                      child={
+                        <DatePicker
+                          selected={this.state.datetime}
+                          className={"form-control"}
+                          showTimeInput
+                          fixedHeight
+                          onChange={(event) => this.setTime(event)}
+                          dateFormat="MM/dd/yyyy h:mm aa"
+                          // locale={"vi"}
+                        />
+                      }
+                    />
                     <div
                       style={{
                         marginLeft: 15,
@@ -290,14 +342,16 @@ class RouteTrip extends Component {
                         marginTop: 5,
                       }}
                     />
-                    <MyButton
-                      style="info"
-                      fill
-                      // type="Choose a route"
-                      // routes={routes}
-                      text="Choose a routes"
-                      click={this.getRoute}
-                    />
+                    <MyButton style="info" fill text="Choose a routes" />
+                  </div>
+                }
+              />
+            </Col>
+            <Col md={7}>
+              <Card
+                title="Route details"
+                content={
+                  <div style={{ height: 500 - 10 }}>
                     <div
                       style={{
                         // height: 200,
@@ -306,36 +360,15 @@ class RouteTrip extends Component {
                       }}
                     >
                       {/* <Maps /> */}
-                      {/* <MapWithADirectionsRenderer
-                        fromLat={41.85073}
-                        fromLng={-87.65126}
-                        toLat={41.85258}
-                        toLng={-87.65141}
-                        // {...mapLocation}
-                      /> */}
-                      <GetMap {...mapLocation} />
+                      <MapWithADirectionsRenderer
+                        // fromLat={41.85073}
+                        // fromLng={-87.65126}
+                        // toLat={41.85258}
+                        // toLng={-87.65141}
+                        {...this.state.location}
+                      />
+                      {/* <GetMap {...mapLocation} /> */}
                       {/* <MapTest fromLat={} toLat={}/> */}
-                    </div>
-                  </div>
-                }
-              />
-            </Col>
-            <Col md={5}>
-              <Card
-                title="Route details"
-                content={
-                  <div style={{ height: 500 - 10 }}>
-                    {/* Ý tưởng là ta sẽ tạo 1 một mảng chứachứa các hướng dẫn rồi show, nó sẽ tự động format cho tata */}
-                    {/* (1) hướng dẫn đàu tiên */}
-                    Rẽ <b>trái</b> tại Cửa Hàng Đtdđ Minh Long vào{" "}
-                    <b>Hẻm 842 Nguyễn Kiệm</b>/<wbr />
-                    <b>Số 21</b>
-                    <div style={{ fontSize: 12 }}>Điểm đến sẽ ở bên phải</div>
-                    {/* (2) hướng dẫn thứ 2 */}
-                    Đi về hướng <b>Tây Bắc</b> lên <b>Đường Nguyễn Văn Nghi</b>{" "}
-                    về phía <b>Lý Thường Kiệt</b>
-                    <div style={{ fontSize: 12 }}>
-                      Đi qua Cửa Hàng Nữ Trang Minh Phát (ở phía bên phải)
                     </div>
                   </div>
                 }
@@ -357,7 +390,8 @@ class RouteTrip extends Component {
 const mapStateToProps = (state) => {
   return {
     fullprofile: state.userprofile,
-    createtripss: state.createtrip,
+    createtripss: state.trip,
+    token: state.user.token,
   };
 };
 

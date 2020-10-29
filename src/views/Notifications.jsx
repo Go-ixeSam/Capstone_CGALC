@@ -46,13 +46,14 @@ class Notifications extends Component {
           key_1: "Value for key_1",
           key_2: "Value for key_2",
         },
-        to: "Device TOKEN HERE",
+        to: "AIzaSyCQimTEcVkasMdxvl9Xa67pp7US_jtuqNU",
       },
     };
 
-    fetch("https://fcm.googleapis.com/fcm/send", fetchOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    fetch(
+      "https://fcm.googleapis.com/fcm/send",
+      fetchOptions
+    ).then((response) => console.log("gui dc rùi"));
   };
 
   /**

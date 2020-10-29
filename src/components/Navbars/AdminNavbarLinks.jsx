@@ -17,8 +17,17 @@
 */
 import React, { Component } from "react";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
+import { connect } from "react-redux";
+import { logout } from "../../redux";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 class AdminNavbarLinks extends Component {
+  logout = () => {
+    this.props.logout()
+    // console.log(this.props)
+    
+  };
+
   render() {
     const notification = (
       <div>
@@ -69,7 +78,12 @@ class AdminNavbarLinks extends Component {
             <MenuItem divider />
             <MenuItem eventKey={2.5}>Separated link</MenuItem>
           </NavDropdown> */}
-          <NavItem eventKey={3} href="#">
+          <NavItem
+            eventKey={3}
+            onClick={() => {
+              this.logout();
+            }}
+          >
             Log out
           </NavItem>
         </Nav>
@@ -77,5 +91,16 @@ class AdminNavbarLinks extends Component {
     );
   }
 }
-
-export default AdminNavbarLinks;
+/**
+ * state này là của redux, và chữ fn đóng vai trò là 1 props
+ * fn có giá trị là state.full_name của redux
+ * @param {} state
+ */
+const mapStateToProps = (state) => {
+  return {
+    fullprofile: state.userprofile,
+    createtripss: state.trip,
+    token: state.user.token,
+  };
+};
+export default connect(mapStateToProps, { logout })(AdminNavbarLinks);
