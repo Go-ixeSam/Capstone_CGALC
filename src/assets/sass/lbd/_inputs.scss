@@ -1,21 +1,21 @@
 .form-control::-moz-placeholder{
-   @include placeholder($medium-gray,1);
+   @include placeholder($border-darkgrey,1);
 }
 .form-control:-moz-placeholder{
-   @include placeholder($medium-gray,1);
+   @include placeholder($border-darkgrey,1);
 }  
 .form-control::-webkit-input-placeholder{
-   @include placeholder($medium-gray,1); 
+   @include placeholder($border-darkgrey,1); 
 } 
 .form-control:-ms-input-placeholder{
-   @include placeholder($medium-gray,1);
+   @include placeholder($border-darkgrey,1);
 }
 
 .form-control {
     background-color: $white-bg;
-    border: 1px solid $light-gray;
+    border: 1px solid $border-darkgrey;
     border-radius: $border-radius-base;
-    color: #565656;
+    color: $border-darkgrey;
     @include input-size($padding-base-vertical, $padding-base-horizontal - 4, $height-base);
     @include box-shadow(none);
     

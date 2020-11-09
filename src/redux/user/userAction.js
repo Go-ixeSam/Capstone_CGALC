@@ -4,22 +4,31 @@ import URL from "../../api/UrlConstans";
 // import { AxiosMethod } from "../../axios.js";
 
 /**
- * Noi tao action creator
- * @param {*} usernmam
+ * APi login yêu cầu 3 
+ * @param {username,Password,deviceToken} 
+ * với deviceToken là sử dụng firebaseToken
  */
-export const login = (username, pass) => async (dispatch) => {
-  const result = await loginAPI.post("http://localhost:44340"+URL.login, {
+export const login = (username, pass, firebaseToken) => async (dispatch) => {
+  const result = await loginAPI.post("http://localhost:44340" + URL.login, {
     Username: username,
     Password: pass,
+    deviceToken: firebaseToken,
   });
   return dispatch({
     type: UserType.LOGIN,
     payload: result.data.token,
   });
 };
-export const logout=()=>{
-  return{
-    type:UserType.LOGOUT,
-    payload:""
-  }
-}
+export const logout = () => {
+  return {
+    type: UserType.LOGOUT,
+    payload: "",
+  };
+};
+
+export const saveFirebaseToken = (token) => {
+  return {
+    type: UserType.FIREBASETOEKN,
+    payload: token,
+  };
+};

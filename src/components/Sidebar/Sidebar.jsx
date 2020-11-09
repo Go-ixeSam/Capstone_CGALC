@@ -17,7 +17,7 @@
 */
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { routetriplink, isCheck } from "../../variables/Variables.jsx";
+import { routetriplink, isCheck,notification } from "../../variables/Variables.jsx";
 import AdminNavbarLinks from "../Navbars/AdminNavbarLinks.jsx";
 import "../Sidebar/Sidebar.css";
 import logo from "../../assets/img/gas_station_background.png";
@@ -70,11 +70,15 @@ class Sidebar extends Component {
             {/* cái dòng trên là resposive, nếu chiều ngang mà nhỏ hơn 991 thì cái side bar sẽ thu lại */}
             {this.props.routes.map((prop, key) => {
               var li = <li></li>;
-              var imgSize="20%";
+              var imgSize="15%";
+              let link=prop.layout + prop.path
+              
 
               //Cái dòng trên có tác dụng để dấu đi những cái NavLink chỉ có thể
               // xuất hiện khi nhấp button "Find routes"
-              if (prop.layout + prop.path == routetriplink) {
+              // if (prop.layout + prop.path == routetriplink) | {
+              if (link == routetriplink|| link==notification) {
+              // if (link == routetriplink) {
                 li = <li display="none" />;
               } else {
                 if (!prop.redirect)

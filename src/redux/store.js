@@ -1,12 +1,10 @@
-import { useStore } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import userReducer from "./user/userReducer.js";
-import rootReducer from "./rootReducer";
-import ReduxThunk from "redux-thunk";
+import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-
-const store = createStore(
+import { persistStore } from "redux-persist";
+import ReduxThunk from "redux-thunk";
+import rootReducer from "./rootReducer";
+export const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(ReduxThunk))
 );
-export default store;
+export const persistor = persistStore(store);

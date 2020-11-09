@@ -51,17 +51,23 @@ CustomButton.propTypes = {
  * @param {*} argument
  */
 export const MyButton = (argument) => {
-  return (
-    
-      <Button bsStyle={argument.style} onClick={argument.click}>
+  let button = <Button></Button>;
+  if (argument.disable==true) {
+    button = (
+      <Button {...argument} disabled={true}>
         {console.log(argument.layout + argument.path)}
-        {/* <i className={prop.icon} /> */}
-        {/* Nếu muốn dùng mấy icon dạng png thì thay cái <i> bằng <img>, và đổi lại hết đống
-      icon ở file routes.js, vì cái đó đc tạo từ css */}
         {argument.text}
       </Button>
-    
-  );
+    );
+  } else {
+    button = (
+      <Button {...argument}>
+        {console.log(argument.layout + argument.path)}
+        {argument.text}
+      </Button>
+    );
+  }
+  return button;
 };
 
 /**

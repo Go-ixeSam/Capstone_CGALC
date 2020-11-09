@@ -20,15 +20,17 @@ import UserProfile from "./views/UserProfile";
 import TableList from "./views/TableList.jsx";
 import Typography from "./views/Typography.jsx";
 import Icons from "./views/Icons.jsx";
-import Maps from "./views/Maps.jsx";
+// import Maps from "./views/Maps.jsx";
 import Notifications from "./views/Notifications.jsx";
 import Upgrade from "./views/Upgrade.jsx";
 import Order from "./views/Order.jsx";
 import Schedule from "./views/Schedule.jsx";
 import trip from "./assets/img/trip.png";
 import RouteTrip from "./views/RouteTrip.jsx";
-import MapWithExplain from "./views/Maps_withExplain.jsx";
-import route_icon from "./assets/img/route_icon.png";
+import TripNotification from "./views/Trip_Notification.jsx";
+// import MapWithExplain from "./views/Maps_withExplain.jsx";
+import route_icon from "./assets/img/icons8-route-64.png";
+import notification_icon from "./assets/img/icons8-globe-64.png";
 
 var number = 1; //Dùng cách này để kiểm tra role của user, vì chỗ này như 1 cái biến thôi nên ta sẽ ko tạo 1 component ở đây. Thay đổi
 // cách để khi đăng nhập vào sẽ mở chức năng tương tự
@@ -41,9 +43,8 @@ const dashboardRoutes = [
       //   layout: "/admin",
       // },
       {
-        path: "/routetrip",
-        name: "RouteTrip",
-        // icon: "pe-7s-graph",
+        path: "/route",
+        name: "TripRoute",
         component: RouteTrip,
         layout: "/admin",
       },
@@ -96,11 +97,18 @@ const dashboardRoutes = [
       //   component: Maps,
       //   layout: "/admin",
       // },
+      // {
+      //   path: "/template-notifications",
+      //   name: "Notifications",
+      //   icon: "pe-7s-bell",
+      //   component: Notifications,
+      //   layout: "/admin",
+      // },
       {
         path: "/notifications",
-        name: "Notifications",
-        icon: "pe-7s-bell",
-        component: Notifications,
+        name: "Notification",
+        icon: notification_icon,
+        component: TripNotification,
         layout: "/admin",
       },
       // {
@@ -110,6 +118,13 @@ const dashboardRoutes = [
       //   component: MapWithExplain,
       //   layout: "/admin",
       // },
+      {
+        path: "/icons",
+        name: "Icons",
+        icon: "pe-7s-science",
+        component: Icons,
+        layout: "/admin",
+      },
     ];
 // {
 //   if (number == 1) {
@@ -156,13 +171,7 @@ const dashboardRoutes = [
 //       //   component: Typography,
 //       //   layout: "/admin"
 //       // },
-//       {
-//         path: "/icons",
-//         name: "Icons",
-//         icon: "pe-7s-science",
-//         component: Icons,
-//         layout: "/admin",
-//       },
+     
 //       {
 //         path: "/maps",
 //         name: "Maps Aha",

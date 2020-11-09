@@ -16,26 +16,86 @@
 
 */
 import React, { Component } from "react";
-import { Route, Switch ,Redirect} from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import NotificationSystem from "react-notification-system";
-
+import { Grid, Row, Col, Alert } from "react-bootstrap";
 import AdminNavbar from "../components/Navbars/AdminNavbar";
 import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.jsx";
 import { style, primaryColor, yellowColor } from "../variables/Variables.jsx";
 import routes from "../routes.js";
-import image from "../assets/img/sidebar-3.jpg";
+import image from "../assets/img/road_trip.jpg";
+import { connect } from "react-redux";
 import { messaging } from "../init-fcm";
+import { saveFirebaseToken } from "../redux";
 // import Notifications from "../views/Notifications.jsx";
 
 console.log("màu đây: " + primaryColor);
 
 var color = primaryColor;
+var titleName="";
 class Admin extends Component {
   //
   constructor(props) {
     super(props);
+
+    /**
+     * *kiểu thử nghiệm ref mới đã thành công, với kiểu callback ref này, ta có  thể sử dụng this.notify ở mọi nơi
+     */
+    this.notify = null;
+
+    this.setNotify = (element) => {
+      this.notify = element;
+    };
+
+    /**
+     * *Đã thành công trong việc thay đổi kiểu ref "legacy" (có thể tìm đọc trong đây:https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs) thành ref mới (bằng phương thức: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs )
+     *
+     */
+    this.addNotify = () => {
+      // var color = Math.floor(Math.random() * 4 + 1);
+      var color = 1;
+      var level;
+      switch (color) {
+        case 1:
+          level = "success";
+          break;
+        case 2:
+          level = "warning";
+          break;
+        case 3:
+          level = "error";
+          break;
+        case 4:
+          level = "info";
+          break;
+        default:
+          break;
+      }
+      // Cách để bắn notification ở đây
+      this.notify.addNotification({
+        // title: <span data-notify="icon" className="pe-7s-bell" />,
+        title: <span data-notify="icon" className="pe-7s-bell" />,
+        message: (
+          <div>
+            <span data-notify="message">
+              <p style={{margin:0}}>Tài xế <b>Nguyễn Văn Cừ</b> - đã nhận được chuyến đi.</p>
+            </span>
+          </div>
+          // <div>
+          //   Tài xế <b>Nguyễn Văn Cừ</b> - đã nhận được chuyến đi.
+          // </div>
+        ),
+        level: level,
+        position: "tr",
+        autoDismiss: 0,
+        onAdd:()=>{
+          console.log("Đã click rồi nè");
+        }
+      });
+    };
+
     this.state = {
       _notificationSystem: null,
       image: image,
@@ -67,7 +127,8 @@ class Admin extends Component {
       default:
         break;
     }
-    this.state._notificationSystem.addNotification({
+    // this.state._notificationSystem.addNotification({
+    this.notify.addNotification({
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
@@ -78,6 +139,12 @@ class Admin extends Component {
       level: level,
       position: position,
       autoDismiss: 15,
+      action: {
+        label: "Button name",
+        callback: function () {
+          console.log("Notification button clicked!");
+        },
+      },
     });
   };
   // Hàm này sẽ xử lí việc nhấp vào cái item ở nav bar và đưa ta đến trang cần tìm
@@ -94,6 +161,7 @@ class Admin extends Component {
             <Route
               path={prop.layout + prop.path}
               render={(props) => (
+                console.log("cái cần để ý: ",props),
                 <prop.component
                   {...props}
                   handleClick={this.handleNotificationClick}
@@ -119,6 +187,8 @@ class Admin extends Component {
           routes[i].layout + routes[i].path
         ) !== -1
       ) {
+        console.log()
+        titleName=routes[i].name
         return routes[i].name;
       }
     }
@@ -141,6 +211,9 @@ class Admin extends Component {
     }
   };
 
+  /**
+   * Hàm lấy firebase token
+   */
   notifyMe() {
     // Let's check if the browser supports notifications
     if (!("Notification" in window)) {
@@ -149,12 +222,12 @@ class Admin extends Component {
 
     // Let's check whether notification permissions have already been granted
     else if (Notification.permission === "granted") {
-      // If it's okay let's create a notification
-      var notification = new Notification("Hi there!");
-      // <Notifications
-      // handleClick={this.handleNotificationClick("trtr")}
-      // />
-      this.getCurrentToken();
+      // var notification = new Notification("Hi there!");
+
+      // Kiểm tra xem firebaseToken đã có chưa
+      if (this.props.firebaseToken) {
+        this.getCurrentToken();
+      }
     }
 
     // Otherwise, we need to ask the user for permission
@@ -163,7 +236,6 @@ class Admin extends Component {
         // If the user accepts, let's create a notification
         if (permission === "granted") {
           var notification = new Notification("Hi there!");
-          // this.getCurrentToken()
         }
       });
     }
@@ -178,51 +250,17 @@ class Admin extends Component {
       .getToken()
       .then((currentToken) => {
         console.log("Day la Token= " + currentToken);
+        this.props.saveFirebaseToken(currentToken);
       })
       .catch((err) => {
         console.log("An error occurred while retrieving token. ", err);
-        // showToken("Error retrieving Instance ID token. ", err);
         // setTokenSentToServer(false);
       });
   };
 
   componentDidMount() {
     this.notifyMe();
-    // Khai báo 1 notification system ở đây
-    this.setState({ _notificationSystem: this.refs.notificationSystem });
-    var _notificationSystem = this.refs.notificationSystem;
-    var color = Math.floor(Math.random() * 4 + 1);
-    var level;
-    switch (color) {
-      case 1:
-        level = "success";
-        break;
-      case 2:
-        level = "warning";
-        break;
-      case 3:
-        level = "error";
-        break;
-      case 4:
-        level = "info";
-        break;
-      default:
-        break;
-    }
-
-    // Cách để bắn notification ở đây
-    _notificationSystem.addNotification({
-      title: <span data-notify="icon" className="pe-7s-gift" />,
-      message: (
-        <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
-        </div>
-      ),
-      level: level,
-      position: "tr",
-      autoDismiss: 15,
-    });
+    this.addNotify();
   }
   componentDidUpdate(e) {
     if (
@@ -242,7 +280,10 @@ class Admin extends Component {
   render() {
     return (
       <div className="wrapper">
-        <NotificationSystem ref="notificationSystem" style={style} />
+        {/* <NotificationSystem ref="notificationSystem" style={style} /> */}
+
+        {/* thử nghiệm ref mới */}
+        <NotificationSystem ref={this.setNotify} style={style} />
         <Sidebar
           {...this.props}
           routes={routes}
@@ -262,7 +303,7 @@ class Admin extends Component {
           {/* Cai phan nay danh co navBar, la cai bar o tren top */}
           {/* Switch đây là chỗ sẽ đưa ta đến page cần đến dựa vào cái path đc cung cấp */}
           <Footer />
-          <FixedPlugin
+          {/* <FixedPlugin
             handleImageClick={this.handleImageClick}
             handleColorClick={this.handleColorClick}
             handleHasImage={this.handleHasImage}
@@ -271,11 +312,16 @@ class Admin extends Component {
             mini={this.state["mini"]}
             handleFixedClick={this.handleFixedClick}
             fixedClasses={this.state.fixedClasses}
-          />
+          /> */}
         </div>
       </div>
     );
   }
 }
-
-export default Admin;
+const mapStateToProps = (state) => {
+  return {
+    firebaseToken: state.user.firebaseToken,
+  };
+};
+document.title=titleName
+export default connect(mapStateToProps, { saveFirebaseToken })(Admin);

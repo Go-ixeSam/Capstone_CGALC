@@ -4,9 +4,7 @@ import { FormRadio } from "../CustomRadio/CustomRadio.jsx";
 import time from "../../assets/img/time.png";
 import trip from "../../assets/img/icon_estimate.png";
 import { DecideButton } from "../CustomButton/CustomButton.jsx";
-// import Checkbox from "../CustomCheckbox/CustomCheckbox.jsx";
 // import Table from 'react-bootstrap/Table'
-import Checkbox from "react-checkbox-component";
 import "../CustomTable/CustomeTable.css";
 var i = 1;
 var paddingNumber = "5px";

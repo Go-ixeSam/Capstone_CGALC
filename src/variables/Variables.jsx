@@ -99,7 +99,7 @@ var style = {
       borderRadius: "4px",
       fontSize: "14px",
       margin: "10px 0 0",
-      padding: "10px",
+      padding: "15px",
       display: "block",
       WebkitBoxSizing: "border-box",
       MozBoxSizing: "border-box",
@@ -109,7 +109,6 @@ var style = {
       WebkitTransform: "translate3d(0, 0, 0)",
       transform: "translate3d(0, 0, 0)",
       willChange: "transform, opacity",
-
       isHidden: {
         opacity: 0
       },
@@ -121,7 +120,7 @@ var style = {
 
     success: {
       borderTop: 0,
-      backgroundColor: "#a1e82c",
+      backgroundColor: "#34cba7",
       WebkitBoxShadow: 0,
       MozBoxShadow: 0,
       boxShadow: 0
@@ -271,16 +270,23 @@ const fueltype="fueltype";
 const triptype="triptype";
 const tripArr=["One way","Round Trip"]
 const fuelArr=["Ron95-IV","Ron95-III, E5 Ron92-II, DO 0,001S-V, DO 0,05S-II, Dầu hỏa 2-K"];
-const lengthError="lengthError";
-const positiveNumber="positiveNumber";
+
 const isCheck="isCheck";
 const select="select";
-const baseUrl="";
 const CLASS="";
-const routetriplink="/admin/routetrip";
+const routetriplink="/admin/route";
+const notification="/admin/notifications";
 const firebaseToken="e01y43_6_pR9jAhHlZmxLu:APA91bHLrZOXkyJLcRtR6TxltEcqFZ8LOoL3ZIzCSjOcL-bs1ZpeiYLgDtDAdzJ8xQALo_YTx0NqyCSH7PZdMPwe23oeXUaTUI-i5s55j-gagHM2zwAtXV6Ge3KYGaQy2iyytOtUgjW-";
 const projectAPIToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImZsZWV0bWFuYWdlcjEiLCJVc2VySWQiOiJkZWRmZTc0Ni0wNDdlLTRmNjEtYWVkMy0zZTQwMDVmMTJmZWMiLCJuYmYiOjE2MDM0OTE1OTMsImV4cCI6MTYwMzc1MDc5MywiaWF0IjoxNjAzNDkxNTkzfQ.48AI6wT-AZLeiie05we1ovEo-QwS-3P-elIX4RHuIFA";
 const AcessToken="access-token";
+const success="success";
+const error="error";
+const baseUrl="http://localhost:44340";
+
+//validation type
+const required="required"
+const positiveNumber="positiveNumber";
+
 
 //Đây là nơi chứa dữ liệu giả của template
 const tdArray = [
@@ -612,8 +618,10 @@ var legendBar = {
   names: ["Tesla Model S", "BMW 5 Series"],
   types: ["info", "danger"]
 };
-const primaryColor="#032D23";
-const secondsecondColor="#34CBA7";
+// --primary:#34cba7;
+// --second:#6fcf97;
+const primaryColor="#34cba7";
+const secondsecondColor="#6fcf97";
 const yellowColor="#AAA713";
 const lightYellowColor="#F2F1AD";
 module.exports = {
@@ -640,5 +648,14 @@ module.exports = {
   CLASS,
   projectAPIToken,
   AcessToken,
-  legendBar // For charts (Dashboard view)
+  success,
+  error,
+  notification,
+  required,
+  positiveNumber,
+//   onst required="required"
+// const positiveNumber="positiveNumber";
+
+
+  legendBar, // For charts (Dashboard view)
 };

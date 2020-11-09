@@ -36,6 +36,7 @@
              line-height: 16px;
              top: 1px;
         }
+       
         
         .notification{
             position: absolute;
@@ -50,7 +51,7 @@
             font-weight: bold;
             line-height: 18px;
             top: 0px;
-            left: 7px;
+            left: 25px;
         }
     }
     .btn{
@@ -172,7 +173,7 @@
         > li > a:not(.btn):focus {
             background-color: transparent;
             border-radius: 3px;
-            color: $info-color;
+            color: $info-color-primary;
             @include opacity(1);
         }
         

@@ -15,36 +15,35 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { composeWithDevTools } from "redux-devtools-extension";
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom";
-
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import reducers from "./store/reducers/userprofile";
-
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/css/animate.min.css";
-import "./assets/sass/light-bootstrap-dashboard-react.scss?v=1.3.0";
-import "./assets/css/demo.css";
-import rootReducer from "./store/reducers";
-import "./assets/css/pe-icon-7-stroke.css";
-import SignUp from "../src/SignIn.js";
-import SignIn from "../src/SignUp.js";
-import TripRoute from "./views/RouteTrip.jsx";
-import Noti from "./views/Notifications.jsx";
-import AdminLayout from "../src/layouts/Admin.jsx";
+import { BrowserRouter } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.js";
-import store from "./redux/store.js";
+import "./assets/css/animate.min.css";
+import "./assets/css/demo.css";
+import "./assets/css/pe-icon-7-stroke.css";
+import "./assets/sass/light-bootstrap-dashboard-react.scss?v=1.3.0";
+import { persistor, store } from "./redux/store.js";
+let fontLink=document.createElement("link");
+fontLink.rel="stylesheet"
+fontLink.href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+let iconLink=document.createElement("link")
+iconLink.rel="stylesheet"
+iconLink.href="https://fonts.googleapis.com/icon?family=Material+Icons"
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      {/* <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-        <Redirect from="/" to="/admin/trip" /> */}
-        <App />
+      <PersistGate persistor={persistor}>
+        <App /> 
+      </PersistGate>
     </BrowserRouter>
-    {/* , //{" "} */}
   </Provider>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
+document.getElementsByTagName("HEAD")[0].appendChild(fontLink);
+document.getElementsByTagName("HEAD")[0].appendChild(iconLink);
+// document.title="Cheapest trip cost"

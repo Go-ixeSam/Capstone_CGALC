@@ -20,31 +20,44 @@ import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
 import { connect } from "react-redux";
 import { logout } from "../../redux";
 import { Route, Switch, Redirect } from "react-router-dom";
-
+import Radium from "radium";
 class AdminNavbarLinks extends Component {
   logout = () => {
-    this.props.logout()
-    // console.log(this.props)
-    
+    this.props.logout();
+  };
+  goToNotificationtification = () => {
+    this.props.history.replace("notifications");
   };
 
   render() {
-    const notification = (
-      <div>
-        <i className="fa fa-globe" />
-        <b className="caret" />
-        <span className="notification">7</span>
-        <p className="hidden-lg hidden-md">Notification</p>
-      </div>
-    );
+    let style = {
+      whenHover: {
+        fontSize: "20px",
+      },
+    };
+    // const notification = (
+    //   <div>
+    //     <i className="fa fa-globe" />
+    //     <b className="caret" />
+    //     <span className="notification">7</span>
+    //     <p className="hidden-lg hidden-md">Notification</p>
+    //   </div>
+    // );
     return (
       <div>
-        {/* <Nav>
-          <NavItem eventKey={1} href="#">
+        <Nav>
+          <NavItem eventKey={1} onClick={this.goToNotificationtification}>
+            <i className="pe-7s-bell" style={style.whenHover} />
+            <span className="notification">7</span>
+            <p className="hidden-lg hidden-md">Notification</p>
+          </NavItem>
+        </Nav>
+        {/* <NavItem eventKey={1} href="#">
             <i className="fa fa-dashboard" />
             <p className="hidden-lg hidden-md">Dashboard</p>
-          </NavItem>
-          <NavDropdown
+          </NavItem> */}
+
+        {/* <NavDropdown
             eventKey={2}
             title={notification}
             noCaret
@@ -59,8 +72,7 @@ class AdminNavbarLinks extends Component {
           <NavItem eventKey={3} href="#">
             <i className="fa fa-search" />
             <p className="hidden-lg hidden-md">Search</p>
-          </NavItem>
-        </Nav> */}
+          </NavItem> */}
         <Nav pullRight>
           {/* <NavItem eventKey={1} href="#">
             Account
@@ -78,12 +90,7 @@ class AdminNavbarLinks extends Component {
             <MenuItem divider />
             <MenuItem eventKey={2.5}>Separated link</MenuItem>
           </NavDropdown> */}
-          <NavItem
-            eventKey={3}
-            onClick={() => {
-              this.logout();
-            }}
-          >
+          <NavItem eventKey={3} onClick={this.logout}>
             Log out
           </NavItem>
         </Nav>
@@ -103,4 +110,4 @@ const mapStateToProps = (state) => {
     token: state.user.token,
   };
 };
-export default connect(mapStateToProps, { logout })(AdminNavbarLinks);
+export default connect(mapStateToProps, { logout })(Radium(AdminNavbarLinks));

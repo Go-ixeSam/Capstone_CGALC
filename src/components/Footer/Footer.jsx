@@ -17,15 +17,29 @@
 */
 import React, { Component } from "react";
 import { Grid } from "react-bootstrap";
+import Radium from "radium";
+import {primaryColor} from "../../variables/Variables"
 
 class Footer extends Component {
   render() {
+    var styles = {
+      myStyle: {
+        // position: "absolute",
+        left: 0,
+        bottom: 0,
+        width: "100%",
+        // backgroundColor: "red",
+        color: "white",
+        textAlign: "center",
+      },
+    };
     return (
-      <footer className="footer">
+      // <footer className="footer">
+      <footer className="footer" style={styles.myStyle}>
         <Grid fluid>
-          <nav className="pull-left">
+          {/* <nav className="pull-left">
             <ul>
-              {/* <li>
+              <li>
                 <a href="#pablo">Home</a>
               </li>
               <li>
@@ -36,14 +50,20 @@ class Footer extends Component {
               </li>
               <li>
                 <a href="#pablo">Blog</a>
-              </li> */}
+              </li>
             </ul>
-          </nav>
-         
+          </nav> */}
+          <p className="copyright">
+            &copy; {new Date().getFullYear()}{" "}
+            <b style={{color:primaryColor}}>
+              Cheapest trip cost
+            </b>
+            , leave it to us
+          </p>
         </Grid>
       </footer>
     );
   }
 }
 
-export default Footer;
+export default Radium(Footer);

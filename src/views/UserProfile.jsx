@@ -1,24 +1,128 @@
 import React, { Component } from "react";
-import { Col, Form, Grid, Row } from "react-bootstrap";
-import { CustomFormGroup } from "../components/ByMySelf/Form.js";
-import { Card } from "../components/Card/Card.jsx";
-import SeperateLine from "../components/formserparate/SeperateLine.js";
-import { ShowPopUp } from "../components/Popup/Popup.js";
-import { triptype } from "../variables/Variables.jsx";
-import { Link } from "react-router-dom";
-import { MyButton } from "../components/CustomButton/CustomButton.jsx";
+import { Button, Col, Form, Grid, Row, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import { getRoute, login } from "../redux";
-import * as actionTypes from "../store/actions";
-import { AcessToken } from "../variables/Variables";
 import Cookies from "universal-cookie";
+import { FormInput } from "../components/ByMySelf/Form.js";
+import Validation from "../components/ByMySelf/InputValidation";
+import { Card, CardNoFooter } from "../components/Card/Card.jsx";
+import { MyButton } from "../components/CustomButton/CustomButton";
+import { ShowPopUp } from "../components/Popup/Popup.js";
+import { getRoute, login } from "../redux";
+import { CustomMaterialTable } from "../components/CustomTable/CustomeMaterialTable";
+import * as actionTypes from "../store/actions";
+import {
+  AcessToken,
+  success,
+  required,
+  positiveNumber,
+} from "../variables/Variables";
+
 const cookies = new Cookies();
 
 class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      trip: {
+      tripForm: [
+        {
+          row: {
+            cols: [
+              {
+                // name: "startingLocation",
+                colNumber: 6,
+                elementType: "input",
+                elementConfig: {
+                  name: "startingLocation",
+                  type: "text",
+                  labeltext: "Starting Location",
+                  placeholder: "44 duong so 9",
+                  value: "",
+                },
+                validation: [required],
+                valid: {},
+              },
+              {
+                // name: "destination",
+                colNumber: 6,
+                elementType: "input",
+                elementConfig: {
+                  name: "destination",
+                  type: "text",
+                  labeltext: "Destination",
+                  placeholder: "33 duong Vinh Vien",
+                  value: "",
+                },
+                validation: [required],
+                valid: {},
+              },
+            ],
+          },
+        },
+        {
+          row: {
+            cols: [
+              {
+                name: "cargoVolume",
+                colNumber: 3,
+                elementType: "input",
+                elementConfig: {
+                  name: "cargoVolume",
+                  type: "number",
+                  labeltext: "Cargo volume",
+                  placeholder: "0",
+                  value: "",
+                },
+                validation: [required, positiveNumber],
+                valid: {},
+              },
+            ],
+          },
+        },
+      ],
+
+      tripType: {
+        colNumber: 6,
+        elementType: "select",
+        elementConfig: {
+          labeltext: "Trip Type",
+          options: [
+            { id: "oneway", value: "oneway", displayValue: "One way" },
+            { id: "roundtrip", value: "roundtrip", displayValue: "Round trip" },
+          ],
+          value: "oneway",
+        },
+        valid: {},
+      },
+      tripTable: {
+        tableHeader: [
+          {
+            id: "Destination",
+            label: "Destination",
+            minWidth: 300,
+          },
+          {
+            id: "Date created",
+            label: "Date created",
+            minWidth: 100,
+          },
+          {
+            id: "status",
+            label: "status",
+            minWidth: 100,
+          },
+        ],
+        tableBody: {
+          record: [
+            // {
+            //   id: "",
+            //   destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+            //   dateCreated: "25/08/2018",
+            //   status: "Ready",
+            // }
+          ],
+        },
+      },
+      tripData: {
         startingLocation: "",
         destination: "",
         tripType: "One way",
@@ -40,6 +144,8 @@ class UserProfile extends Component {
           },
         },
       },
+
+      formIsValid: false,
       username: "Samnk",
       password: "2511",
       full_name: "Nguyen Khac Sam",
@@ -79,19 +185,19 @@ class UserProfile extends Component {
         },
       ],
       //state luu tru du lieu
-      startingLocation: "",
-      destination: "",
-      tripType: "One way",
-      vehicleModel: "",
-      carManufacturer: "",
-      cityMpg: "",
-      highwayMpg: "",
-      tankSize: "",
-      fuelType: "Ron95-IV",
-      driver: {
-        id: "",
-        name: "",
-      },
+      // startingLocation: "",
+      // destination: "",
+      // tripType: "One way",
+      // vehicleModel: "",
+      // carManufacturer: "",
+      // cityMpg: "",
+      // highwayMpg: "",
+      // tankSize: "",
+      // fuelType: "Ron95-IV",
+      // driver: {
+      //   id: "",
+      //   name: "",
+      // },
       popupConten: {
         color: "green",
         message: "Nice",
@@ -182,10 +288,74 @@ class UserProfile extends Component {
 
   componentDidMount = () => {
     cookies.set(AcessToken, this.props.token, { path: "/" });
-    console.log("đã set cookie")
-    this.prepareValueForTruckSelect();
+    console.log("đã set cookie");
+    this.prepareValueForTripTable();
+    // this.prepareValueForTruckSelect();
   };
+  // componentDidUpdate=()=>{
+  //   this.prepareValueForTripTable()
+  // }
 
+  prepareValueForTripTable = () => {
+    let tmp = { ...this.state.tripTable };
+    let records = tmp.tableBody.record;
+    let col1 = {
+      id: "1",
+      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+      dateCreated: "25/08/2018",
+      status: "Ready",
+    };
+    let col2 = {
+      id: "2",
+      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+      dateCreated: "25/08/2018",
+      status: "Ready",
+    };
+    let col3 = {
+      id: "3",
+      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+      dateCreated: "25/08/2018",
+      status: "Ready",
+    };
+    let col4 = {
+      id: "4",
+      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+      dateCreated: "25/08/2018",
+      status: "Ready",
+    };
+    let col5 = {
+      id: "5",
+      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+      dateCreated: "25/08/2018",
+      status: "Ready",
+    };
+    let col6 = {
+      id: "6",
+      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
+      dateCreated: "25/08/2018",
+      status: "Ready",
+    };
+    // let col1Extra = { ...col1, checked: false };
+    records.push({...col1,checked:false});
+    records.push({...col2,checked:false});
+    records.push({...col3,checked:false});
+    records.push({...col4,checked:false});
+    records.push({...col5,checked:false});
+    records.push({...col6,checked:false});
+    // tmp.tableBody.record.map((obj) => {
+    //   obj = { ...obj, checked: false };
+    // });
+
+    console.log(tmp);
+    this.setState({
+      tripTable: {
+        ...tmp,
+        tableBody: {
+          record: [...records],
+        },
+      },
+    });
+  };
   prepareValueForTruckSelect = () => {
     var values = {};
     const tmp = [...this.state.truckValue];
@@ -207,7 +377,7 @@ class UserProfile extends Component {
     let values = {};
     const truckValueTmp = [];
     const trucks = [];
-    var tripTmp = { ...this.state.trip };
+    var tripTmp = { ...this.state.tripForm };
     this.state.trucks.map((obj) => {
       if (weight == obj.weight) {
         values = { id: obj.id, value: obj.name + " - " + obj.driver.name };
@@ -238,89 +408,158 @@ class UserProfile extends Component {
     console.log("đây là title: " + this.state.myTitle);
   };
 
-  handle = (event, fieldName, truckID) => {
-    var tmp = { ...this.state.trip };
-    switch (fieldName) {
-      case "startingLocation":
-        this.setState({
-          trip: { ...tmp, startingLocation: event.target.value },
-        });
-        break;
-      case "destination":
-        this.setState({
-          trip: { ...tmp, destination: event.target.value },
-        });
-        break;
-      case "vehicleModel":
-        this.setState({
-          trip: { ...tmp, vehicleModel: event.target.value },
-        });
-        break;
-      case "carManufacturer":
-        this.setState({
-          trip: { ...tmp, carManufacturer: event.target.value },
-        });
-        break;
-      case "cityMpg":
-        // ko còn dùng nữa
-        this.setState({
-          trip: { ...tmp, cityMpg: event.target.value },
-        });
-        break;
-      case "highwayMpg":
-        // ko còn dùng nữa
-        this.setState({
-          trip: { ...tmp, highwayMpg: event.target.value },
-        });
-        break;
-      case "tankSize":
-        // ko còn dùng nữa
-        this.setState({
-          trip: { ...tmp, tankSize: event.target.value },
-        });
-        break;
-      case "tripType":
-        this.setState({
-          trip: { ...tmp, tripType: event.target.value },
-        });
-        break;
-      case "fuelType":
-        // Ko còn dùng nữa
-        this.setState({
-          trip: { ...tmp, fuelType: event.target.value },
-        });
-        break;
-      case "Weight":
-        //sau khi đa có weight thì tiến hành lựa xe dựa trên weight
-        this.updateSelectTruckItem(event.target.value);
-        break;
-      case "truck":
-        console.log("Da vao rui và đây là truckID= " + event.target.value);
-        const selectId = event.target.value; //id lấy từ value của options trong select
-        this.state.trucks.map((obj) => {
-          //so sánh id người dùng chọn với id của mảng this.state.trucks
-          if (selectId == obj.id) {
-            tmp.truck = { ...obj };
-            console.log(obj);
-            this.setState({
-              trip: { ...tmp, truck: { ...obj } },
-            });
-          }
-        });
+  handle = (event) => {
+    let updatedFormElement = null;
+    let result = {};
+    let formIsValid = true;
+    let validation = new Validation();
+    var tmp = [...this.state.tripForm];
+    const { name, value } = event.target;
+    tmp.map((rows) => {
+      rows.row.cols.map((col) => {
+        //lấy từng column ra
+        // console.log(col.elementConfig.name);
+        if (name == col.elementConfig.name) {
+          // updatedFormElement = { ...col };
 
-        break;
-      case "driver":
-        this.setState({
-          trip: {
-            ...tmp,
-            driver: {
-              name: event.target.value,
-            },
-          },
-        });
-        break;
-    }
+          // validation từng column
+          if (name != "tripType") {
+            result = validation.getValidationState(value, col.validation);
+          } else {
+            result = { type: success, errorMessage: "" };
+          }
+
+          //gán lại giá trị
+          col.elementConfig.value = value;
+          console.log(result);
+          col.valid = { ...result };
+          //cập nhật lại column
+          // col = updatedFormElement;
+        }
+      });
+    });
+
+    tmp.map((rows) => {
+      rows.row.cols.map((col) => {
+        // console.log(
+        //   "valid: ",
+        //   validation.getValidationState(
+        //     value,
+        //     col.validation
+        //   )
+        // );
+        formIsValid = col.valid.type == success && formIsValid;
+      });
+    });
+
+    console.log(tmp);
+    this.setState({
+      tripForm: [...tmp],
+      formIsValid: formIsValid,
+    });
   };
+  // if (fieldName != "tripType") {
+  //   tmp[fieldName] = updatedFormElement;
+  //   for (let inputIdentifier in tmp) {
+
+  //     formIsValid = tmp[inputIdentifier].valid.type == success && formIsValid;
+  //   }
+  // } else {
+  //   tmp = updatedFormElement;
+  //   formIsValid = tmp.valid && formIsValid;
+  // }
+
+  // console.log(
+  //   "result= ",
+  //   result,
+  //   "field name= ",
+  //   fieldName,
+  //   "valid: ",
+  //   tmp.valid
+  // );
+
+  // }
+  // switch (fieldName) {
+  //   case "startingLocation":
+  //     this.setState({
+  //       trip: { ...tmp, startingLocation: event.target.value },
+  //     });
+  //     break;
+  //   case "destination":
+  //     this.setState({
+  //       trip: { ...tmp, destination: event.target.value },
+  //     });
+  //     break;
+  // case "vehicleModel":
+  //   this.setState({
+  //     trip: { ...tmp, vehicleModel: event.target.value },
+  //   });
+  //   break;
+  // case "carManufacturer":
+  //   this.setState({
+  //     trip: { ...tmp, carManufacturer: event.target.value },
+  //   });
+  //   break;
+  // case "cityMpg":
+  //   // ko còn dùng nữa
+  //   this.setState({
+  //     trip: { ...tmp, cityMpg: event.target.value },
+  //   });
+  //   break;
+  // case "highwayMpg":
+  //   // ko còn dùng nữa
+  //   this.setState({
+  //     trip: { ...tmp, highwayMpg: event.target.value },
+  //   });
+  //   break;
+  // case "tankSize":
+  //   // ko còn dùng nữa
+  //   this.setState({
+  //     trip: { ...tmp, tankSize: event.target.value },
+  //   });
+  //   break;
+  // case "tripType":
+  //   this.setState({
+  //     trip: { ...tmp, tripType: event.target.value },
+  //   });
+  //   break;
+  // case "fuelType":
+  //   // Ko còn dùng nữa
+  //   this.setState({
+  //     trip: { ...tmp, fuelType: event.target.value },
+  //   });
+  //   break;
+  // case "Weight":
+  //   //sau khi đa có weight thì tiến hành lựa xe dựa trên weight
+  //   this.updateSelectTruckItem(event.target.value);
+  //   break;
+  // case "truck":
+  //   console.log("Da vao rui và đây là truckID= " + event.target.value);
+  //   const selectId = event.target.value; //id lấy từ value của options trong select
+  //   this.state.trucks.map((obj) => {
+  //     //so sánh id người dùng chọn với id của mảng this.state.trucks
+  //     if (selectId == obj.id) {
+  //       tmp.truck = { ...obj };
+  //       console.log(obj);
+  //       this.setState({
+  //         trip: { ...tmp, truck: { ...obj } },
+  //       });
+  //     }
+  //   });
+
+  //   break;
+  // case "driver":
+  //   this.setState({
+  //     trip: {
+  //       ...tmp,
+  //       driver: {
+  //         name: event.target.value,
+  //       },
+  //     },
+  //   });
+  //   break;
+  //   }
+  // };
   /**
    * Sự khác nhau khi đối số có { } và ko
    * Nếu ko có thì nó chỉ là đối số bt
@@ -335,19 +574,28 @@ class UserProfile extends Component {
     });
   };
   submitForm = (event) => {
-    // event.preventDefault();
-    const tmp = { ...this.state.trip };
-    tmp.truck.id = 1;
-    // this.props.submitTheForm(tmp);
-    this.props.getRoute(tmp);
+    event.preventDefault();
+    const trip = { ...this.state.tripForm };
+    const tripType = { ...this.state.tripType };
+
+    const formData = {};
+    for (let formElementIdentifier in trip) {
+      {
+        console.log("đây là: ", trip[formElementIdentifier]);
+      }
+      formData[formElementIdentifier] =
+        trip[formElementIdentifier].elementConfig.value;
+    }
+
+    formData["tripType"] = tripType.elementConfig.value;
+
+    // tmp.truck.id = 1;
+    console.log(formData);
+    this.props.getRoute(formData);
+    // this.props.history.replace("routetrip");
+    this.props.history.replace("route");
   };
-  /**
-   * Dùng để test
-   */
-  clickCaiDitConMeMay = () => {
-    console.log("Click đc rồi địt me");
-    console.log(this.state.password);
-  };
+
   /**
    * Mở popup lên
    */
@@ -364,40 +612,144 @@ class UserProfile extends Component {
       visible: false,
     });
   };
+
+  openModalPls = () => {
+    return (
+      <div className="static-modal">
+        <Modal.Dialog>
+          <Modal.Header>
+            <Modal.Title>Modal title</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>One fine body...</Modal.Body>
+
+          <Modal.Footer>
+            <Button>Close</Button>
+            <Button bsStyle="primary">Save changes</Button>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </div>
+    );
+  };
   render() {
-    const props = {
-      fromLat: 41.85073,
-      fromLng: -87.65126,
-      toLat: 41.85258,
-      toLng: -87.65141,
-    };
+    const array = [];
+    // for (let key in this.state.tripForm) {
+    //   array.push({
+    //     content: this.state.tripForm[key],
+    //   });
+    // }
+    // let row = <Row></Row>;
+    let col = <Col></Col>;
+    // console.log("mang= ", array);
     return (
       <div className="content">
         <ShowPopUp
           visible={this.state.visible}
           popupContent={this.state.popupConten}
           onCLose={this.closeModal}
-        />
-        <Form>
-          <Grid fluid>
-            <Row>
-              <Col md={8}>
-                <Card
-                  title="Trip information"
-                  content={
-                    <div>
-                      <Row>
-                        <CustomFormGroup
-                          xsNumber={5}
-                          realValue={this.state.trip.startingLocation}
-                          type="input"
-                          change={(event) => {
-                            this.handle(event, "startingLocation", "");
-                          }}
-                          labelText={"Starting Locatin"}
-                          placeholderText={"starting location"}
+        >
+          <Grid fluid style={{ margin: 0, padding: 0 }}>
+            <CardNoFooter
+              title="Trip form"
+              content={
+                <Form onSubmit={this.submitForm}>
+                  {this.state.tripForm.map((obj, index) => {
+                    let columnss = obj.row.cols;
+                    return (
+                      <Row key={"row-" + index}>
+                        {columnss.map((col, index) => {
+                          col = (
+                            <Col xs={col.colNumber} key={"col-" + index}>
+                              <FormInput
+                                {...col}
+                                id={col.name}
+                                valid={col.valid}
+                                change={(event) => {
+                                  this.handle(event);
+                                }}
+                              />
+                            </Col>
+                          );
+                          return col;
+                        })}
+                      </Row>
+                    );
+                  })}
+                  <Row>
+                    <Col xs={12}>
+                      <MyButton
+                        bsStyle="info"
+                        disable={!this.state.formIsValid}
+                        type="submit"
+                        text="Find routes"
+                      />
+                    </Col>
+                  </Row>
+                </Form>
+              }
+            />
+          </Grid>
+        </ShowPopUp>
+        <Grid fluid>
+          <Row>
+            <Col md={12}>
+              <Card
+                title="Trip information"
+                content={
+                  <div>
+                    <Row>
+                      <Col md={12}>
+                        <CustomMaterialTable
+                          {...this.state.tripTable}
+                          tableBody={this.state.tripTable.tableBody}
                         />
-                        <CustomFormGroup
+                      </Col>
+                    </Row>
+                    {/* <Row>
+                      <Col xs={12}>
+                        <Button bsStyle="primary" onClick={this.openModal}>
+                          Open modal
+                        </Button>
+                      </Col>
+                    </Row> */}
+                    {/* <Row>
+                        <Col xs={this.state.cargoVolume.colNumber}>
+                          <FormInput
+                            {...this.state.cargoVolume}
+                            id={"cargoVolume"}
+                            valid={this.state.cargoVolume.valid}
+                            change={(event) => {
+                              this.handle(event, "cargoVolume", "cargoVolume");
+                            }}
+                          />
+                        </Col>
+                      </Row> */}
+
+                    {/* Loại chuyến */}
+                    {/* <Row>
+                        <Col xs={this.state.tripType.colNumber}>
+                          <CustomFormGroup
+                            {...this.state.tripType}
+                            value={this.state.tripType.value}
+                            valid={this.state.tripType.valid}
+                            change={(event) => {
+                              this.handle(event, "tripType", "tripType");
+                            }}
+                          />
+                        </Col>
+                      </Row> */}
+                    {/* <Row>
+                        <Col xs={12}>
+                          <MyButton
+                            bsStyle="info"
+                            disable={!this.state.formIsValid}
+                            type="submit"
+                            text="Find routes"
+                          />
+                        </Col>
+                      </Row> */}
+
+                    {/* <CustomFormGroup
                           xsNumber={5}
                           type="input"
                           realValue={this.state.trip.destination}
@@ -407,8 +759,9 @@ class UserProfile extends Component {
                           labelText={"Destination"}
                           placeholderText={"destination"}
                         />
-                      </Row>
-                      <Row>
+                      </Row> */}
+
+                    {/* <Row>
                         <CustomFormGroup
                           xsNumber={3}
                           type="select"
@@ -423,10 +776,9 @@ class UserProfile extends Component {
                       </Row>
                       <Row>
                         <SeperateLine text="Truck information" />
-                      </Row>
-                      <Row></Row>
-                      <Row>
-                        {/* <CustomFormGroup
+                      </Row> */}
+                    {/* <Row></Row> */}
+                    {/* <CustomFormGroup
                           realValue={this.state.trip.cityMpg}
                           xsNumber={3}
                           type="number"
@@ -436,7 +788,7 @@ class UserProfile extends Component {
                           labelText={"City (mpg)"}
                           placeholderText={""}
                         /> */}
-                        {/* <CustomFormGroup
+                    {/* <CustomFormGroup
                           xsNumber={3}
                           realValue={this.state.trip.highwayMpg}
                           type="number"
@@ -446,7 +798,7 @@ class UserProfile extends Component {
                           labelText={"highway (mpg)"}
                           placeholderText={""}
                         /> */}
-                        {/* <CustomFormGroup
+                    {/* <CustomFormGroup
                           xsNumber={3}
                           realValue={this.state.trip.tankSize}
                           type="number"
@@ -456,7 +808,7 @@ class UserProfile extends Component {
                           labelText={"Tank size"}
                           placeholderText={""}
                         /> */}
-                        {/* <CustomFormGroup
+                    {/* <CustomFormGroup
                           xsNumber={3}
                           type="select"
                           realValue={this.state.trip.fuelType}
@@ -475,6 +827,8 @@ class UserProfile extends Component {
                           labelText={"Fuel Type"}
                           placeholderText={""}
                         /> */}
+
+                    {/* <Row>
                         <CustomFormGroup
                           xsNumber={3}
                           type="inputnovalidation"
@@ -497,38 +851,22 @@ class UserProfile extends Component {
                           labelText={"Truck"}
                           placeholderText={""}
                         />
-                      </Row>
-                      <Row>
-                        <Col xs={12}>
-                          <Link
-                            // Đây là nơi ta sẽ navigate đến screen tương ứng, đường dẫn link sẽ được truyền tới Admin.jsxjsx
-                            to={"/admin/routetrip"}
-                          >
-                            <MyButton
-                              style="info"
-                              fill
-                              type="submit"
-                              text="Find routes"
-                              click={(event) => this.submitForm(event)}
-                            />
-                          </Link>
-                        </Col>
-                      </Row>
-                      <div className="clearfix" />
-                    </div>
-                  }
-                />
-              </Col>
-              {/* Hiện tại thì tài xế sẽ đi chung với xe tải luôn */}
-              <Col
-                md={2}
-                style={{
-                  background: "#fff",
-                  border: "#333333",
-                  display: "none",
-                }}
-              >
-                {/* <Row>
+                      </Row> */}
+                    <div className="clearfix" />
+                  </div>
+                }
+              />
+            </Col>
+            {/* Hiện tại thì tài xế sẽ đi chung với xe tải luôn */}
+            <Col
+              md={2}
+              style={{
+                background: "#fff",
+                border: "#333333",
+                display: "none",
+              }}
+            >
+              {/* <Row>
                   <div style={{ marginTop: 15, marginLeft: 15 }}>
                     <h4>Driver</h4>
                   </div>
@@ -561,11 +899,10 @@ class UserProfile extends Component {
                   </div>
                 </Row> */}
 
-                {/* cos gif hot */}
-              </Col>
-            </Row>
-          </Grid>
-        </Form>
+              {/* cos gif hot */}
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

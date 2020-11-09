@@ -1,6 +1,7 @@
 import UserType from "./userType.js";
 const initState = {
   token: "",
+  firebaseToken: "",
 };
 const userReducer = (state = initState, action) => {
   switch (action.type) {
@@ -13,7 +14,14 @@ const userReducer = (state = initState, action) => {
       return {
         ...state,
         token: action.payload,
+        firebaseToken:action.payload
       };
+    case UserType.FIREBASETOEKN:
+      return {
+        ...state,
+        firebaseToken: action.payload,
+      };
+      break;
     default:
       return state;
   }

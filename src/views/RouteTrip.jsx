@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Col, Grid, Row } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
+import Cookies from "universal-cookie";
 import driver from "../assets/img/driver-icon.png";
 import direction from "../assets/img/icons8-direction-64.png";
 import sortingsorting from "../assets/img/icon_ascending_sorting.png";
@@ -11,7 +12,6 @@ import phone from "../assets/img/icon_phone.png";
 import to from "../assets/img/icon_to_55.png";
 import route_icon from "../assets/img/route_icon.png";
 import truck from "../assets/img/truck.png";
-import { Helper } from "../helper";
 import weight from "../assets/img/weight.png";
 import { AxiosMethod } from "../axios.js";
 import { Card } from "../components/Card/Card.jsx";
@@ -19,10 +19,9 @@ import { MyButton } from "../components/CustomButton/CustomButton.jsx";
 import { CustomInput } from "../components/CustomInput/CustomInput.jsx";
 import { TableHeaderItem } from "../components/CustomTable/CustomeTable.js";
 import SeperateLine from "../components/formserparate/SeperateLine.js";
-import { MapWithADirectionsRenderer } from "../views/Maps.jsx";
-import { instanceOf } from "prop-types";
+import { Helper } from "../helper";
 import { AcessToken } from "../variables/Variables";
-import Cookies from "universal-cookie";
+import { MapWithADirectionsRenderer } from "../views/Maps.jsx";
 const cookies = new Cookies();
 
 class RouteTrip extends Component {
@@ -69,15 +68,14 @@ class RouteTrip extends Component {
 
   componentDidMount = () => {
     //Lấy dữ liệu đường đi về
-    cookies.set(AcessToken, this.props.userData, { path: "/" });
-
-    const tripInfo = this.props.createtripss.trip;
-    this.getRoute(
-      tripInfo.startingLocation,
-      tripInfo.destination,
-      tripInfo.truck.id,
-      tripInfo.truck.weight
-    );
+    // cookies.set(AcessToken, this.props.userData, { path: "/" });
+    // const tripInfo = this.props.createtripss.trip;
+    // this.getRoute(
+    //   tripInfo.startingLocation,
+    //   tripInfo.destination,
+    //   tripInfo.truck.id,
+    //   tripInfo.truck.weight
+    // );
   };
 
   chooseRoute = (id) => {
@@ -155,15 +153,17 @@ class RouteTrip extends Component {
   };
   render() {
     // Ta có thể viết detructing như ở dưới
-    console.log("Cookie ne: ",cookies.get(AcessToken));
+    console.log("Cookie ne: ", cookies.get(AcessToken));
+    console.log(this.props.createtripss.trip);
     const {
       startingLocation,
       destination,
       tripType,
-      driverName = this.props.createtripss.trip.truck.driver.name,
-      truckName = this.props.createtripss.trip.truck.name,
-      truckWWeight = this.props.createtripss.trip.truck.weight,
-    } = this.props.createtripss.trip;
+      // driverName = this.props.createtripss.trip.truck.driver.name,
+      // truckName = this.props.createtripss.trip.truck.name,
+      // truckWWeight = this.props.createtripss.trip.truck.weight,
+    } 
+    = this.props.createtripss.trip;
 
     var width = "";
 
@@ -293,28 +293,28 @@ class RouteTrip extends Component {
                       width={"auto"}
                     />
                     <SeperateLine changeMargin={true} number={0} text="Truck" />
-                    <TableHeaderItem
+                    {/* <TableHeaderItem
                       img={truck}
                       text={truckName}
                       number={2}
                       width={"max-content"}
-                    />
-                    <TableHeaderItem
+                    /> */}
+                    {/* <TableHeaderItem
                       img={weight}
                       text={truckWWeight + " tấn"}
                       number={2}
-                    />
+                    /> */}
 
                     <SeperateLine
                       changeMargin={true}
                       number={0}
                       text="Driver"
                     />
-                    <TableHeaderItem
+                    {/* <TableHeaderItem
                       img={driver}
                       text={driverName}
                       number={2}
-                    />
+                    /> */}
                     <TableHeaderItem img={phone} text={"08081508"} number={2} />
                     <SeperateLine
                       changeMargin={true}
@@ -342,7 +342,7 @@ class RouteTrip extends Component {
                         marginTop: 5,
                       }}
                     />
-                    <MyButton style="info" fill text="Choose a routes" />
+                    <MyButton bsStyle="info" text="Choose a routes" />
                   </div>
                 }
               />
@@ -360,13 +360,11 @@ class RouteTrip extends Component {
                       }}
                     >
                       {/* <Maps /> */}
-                      <MapWithADirectionsRenderer
-                        // fromLat={41.85073}
-                        // fromLng={-87.65126}
-                        // toLat={41.85258}
-                        // toLng={-87.65141}
-                        {...this.state.location}
-                      />
+                      {/* <MapWithADirectionsRenderer {...this.state.location} /> */}
+                      {/* // fromLat={41.85073}
+                      // fromLng={-87.65126}
+                      // toLat={41.85258}
+                      // toLng={-87.65141} */}
                       {/* <GetMap {...mapLocation} /> */}
                       {/* <MapTest fromLat={} toLat={}/> */}
                     </div>

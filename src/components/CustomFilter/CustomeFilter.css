@@ -1,0 +1,13 @@
+.filter-layout{
+    display: flex;
+    flex-direction: column;
+}
+.text-filter-description{
+    margin: 0;
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 10;
+    font-weight: bold;
+    /* margin-left: 20px; */
+
+}

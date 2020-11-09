@@ -35,8 +35,8 @@ class Notifications extends Component {
       body: {
         collapse_key: "type_a",
         notification: {
-          body: "Body of Your Notification",
-          title: "Title of Your Notification",
+          body: "Lên nóc nhà",
+          title: "Cục xì ngầu",
           icon:
             "http://www.liberaldictionary.com/wp-content/uploads/2019/02/icon-0326.jpg",
         },
