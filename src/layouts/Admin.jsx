@@ -25,7 +25,7 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.jsx";
 import { style, primaryColor, yellowColor } from "../variables/Variables.jsx";
 import routes from "../routes.js";
-import image from "../assets/img/road_trip.jpg";
+import image from "../assets/img/logistics.jpg";
 import { connect } from "react-redux";
 import { messaging } from "../init-fcm";
 import { saveFirebaseToken } from "../redux";
@@ -34,7 +34,7 @@ import { saveFirebaseToken } from "../redux";
 console.log("màu đây: " + primaryColor);
 
 var color = primaryColor;
-var titleName="";
+var titleName = "";
 class Admin extends Component {
   //
   constructor(props) {
@@ -80,7 +80,9 @@ class Admin extends Component {
         message: (
           <div>
             <span data-notify="message">
-              <p style={{margin:0}}>Tài xế <b>Nguyễn Văn Cừ</b> - đã nhận được chuyến đi.</p>
+              <p style={{ margin: 0 }}>
+                Tài xế <b>Nguyễn Văn Cừ</b> - đã nhận được chuyến đi.
+              </p>
             </span>
           </div>
           // <div>
@@ -90,9 +92,9 @@ class Admin extends Component {
         level: level,
         position: "tr",
         autoDismiss: 0,
-        onAdd:()=>{
+        onAdd: () => {
           console.log("Đã click rồi nè");
-        }
+        },
       });
     };
 
@@ -154,30 +156,41 @@ class Admin extends Component {
     return routes.map((prop, key) => {
       //props ở đây chính là phần từ trong mảng routes sau khi dùng .map
       // Nếu đây là admin layout thì mới thực hiện route
-      if (prop.layout == "/admin") {
-        if (role == 1) {
-          // role==1 là mình dùng để test cho trường hợp đăng nhập có nhiều role
-          route = (
-            <Route
-              path={prop.layout + prop.path}
-              render={(props) => (
-                console.log("cái cần để ý: ",props),
-                <prop.component
-                  {...props}
-                  handleClick={this.handleNotificationClick}
-                />
-              )}
-              key={key}
-            />
-          );
-          // );
-        } else {
-          route = <div>HalloHallo</div>;
-        }
-        return route;
-      } else {
-        return null;
-      }
+      return (
+        <Route
+          path={prop.layout + prop.path}
+          render={(props) => (
+            console.log("cái cần để ý: ", props),
+            (
+              <prop.component
+                {...props}
+                handleClick={this.handleNotificationClick}
+              />
+            )
+          )}
+          key={key}
+        />
+      );
+      // if (prop.layout == "/admin") {
+      //   route = (
+      //     <Route
+      //       path={prop.layout + prop.path}
+      //       render={(props) => (
+      //         console.log("cái cần để ý: ", props),
+      //         (
+      //           <prop.component
+      //             {...props}
+      //             handleClick={this.handleNotificationClick}
+      //           />
+      //         )
+      //       )}
+      //       key={key}
+      //     />
+      //   );
+      //   return route;
+      // } else {
+      //   return null;
+      // }
     });
   };
   getBrandText = (path) => {
@@ -187,8 +200,8 @@ class Admin extends Component {
           routes[i].layout + routes[i].path
         ) !== -1
       ) {
-        console.log()
-        titleName=routes[i].name
+        console.log();
+        titleName = routes[i].name;
         return routes[i].name;
       }
     }
@@ -260,7 +273,7 @@ class Admin extends Component {
 
   componentDidMount() {
     this.notifyMe();
-    this.addNotify();
+    // this.addNotify();
   }
   componentDidUpdate(e) {
     if (
@@ -323,5 +336,5 @@ const mapStateToProps = (state) => {
     firebaseToken: state.user.firebaseToken,
   };
 };
-document.title=titleName
+document.title = titleName;
 export default connect(mapStateToProps, { saveFirebaseToken })(Admin);

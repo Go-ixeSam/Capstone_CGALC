@@ -11,6 +11,12 @@ const cookies = new Cookies();
 class App extends React.Component {
   render() {
     {
+      let date = new Date();
+      if (date == "2020-11-09T04:27") {
+        console.log("bằng rùi");
+      } else {
+        console.log("Ko bằng DD");
+      }
       if (
         this.props.history.location.pathname != "/" &&
         this.props.userData === ""

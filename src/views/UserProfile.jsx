@@ -1,20 +1,29 @@
 import React, { Component } from "react";
-import { Button, Col, Form, Grid, Row, Modal } from "react-bootstrap";
+import { Col, Form, Grid, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
-import { FormInput } from "../components/ByMySelf/Form.js";
+import { FormInput,useFormResult } from "../components/ByMySelf/Form.js";
 import Validation from "../components/ByMySelf/InputValidation";
 import { Card, CardNoFooter } from "../components/Card/Card.jsx";
 import { MyButton } from "../components/CustomButton/CustomButton";
+import CustomMaterialTable from "../components/CustomTable/CustomeMaterialTable";
 import { ShowPopUp } from "../components/Popup/Popup.js";
-import { getRoute, login } from "../redux";
-import { CustomMaterialTable } from "../components/CustomTable/CustomeMaterialTable";
-import * as actionTypes from "../store/actions";
+import {
+  addTrip,
+  addTripTableHeader,
+  getRoute,
+  login,
+  modifyContract,
+  ModifyContractFomr
+} from "../redux";
+import ContractType from "../redux/contract/contractType.js";
+import * as variable from "../variables/Variables";
 import {
   AcessToken,
-  success,
-  required,
+  id,
   positiveNumber,
+  required,
+  success,
 } from "../variables/Variables";
 
 const cookies = new Cookies();
@@ -23,63 +32,77 @@ class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tripForm: [
-        {
-          row: {
-            cols: [
-              {
-                // name: "startingLocation",
-                colNumber: 6,
-                elementType: "input",
-                elementConfig: {
-                  name: "startingLocation",
-                  type: "text",
-                  labeltext: "Starting Location",
-                  placeholder: "44 duong so 9",
-                  value: "",
-                },
-                validation: [required],
-                valid: {},
-              },
-              {
-                // name: "destination",
-                colNumber: 6,
-                elementType: "input",
-                elementConfig: {
-                  name: "destination",
-                  type: "text",
-                  labeltext: "Destination",
-                  placeholder: "33 duong Vinh Vien",
-                  value: "",
-                },
-                validation: [required],
-                valid: {},
-              },
-            ],
+      tripTableButton: {
+        style: {
+          height: variable.buttonHeight,
+          borderRadius: variable.borderRadius,
+          padding: variable.buttonPadding,
+          marginRight:5
+        },
+        buttons: [
+          {
+            config: {
+              bsStyle: "info",
+              text: variable.arrangeGoods,
+            },
           },
+          {
+            config: {
+              bsStyle: "info",
+              text: variable.addContract,
+            },
+          },
+          {
+            config: {
+              bsStyle: "danger",
+              text: variable.deleteButton,
+            },
+          },
+        ],
+      },
+      contractFormButton: {
+        style: {
+          height: variable.buttonHeight,
+          borderRadius: variable.borderRadius,
+          padding: variable.buttonPadding,
+          marginRight:5
+        },
+        buttons: [
+          {
+            config: {
+              bsStyle: "info",
+              text: variable.updateButton,
+            },
+          },
+          {
+            config: {
+              bsStyle: "danger",
+              text: variable.deleteButton,
+            },
+          },
+        ],
+      },
+      // contractFilterRequire: [variable.searchFilter, variable.timeFilter],
+      contractFilterRequire: [],
+      tripFilterRequire: [variable.searchFilter, variable.timeFilter],
+      tableHeader: [
+        {
+          id: variable.destination,
+          value: "Destination",
         },
         {
-          row: {
-            cols: [
-              {
-                name: "cargoVolume",
-                colNumber: 3,
-                elementType: "input",
-                elementConfig: {
-                  name: "cargoVolume",
-                  type: "number",
-                  labeltext: "Cargo volume",
-                  placeholder: "0",
-                  value: "",
-                },
-                validation: [required, positiveNumber],
-                valid: {},
-              },
-            ],
-          },
+          id: variable.status,
+          value: "Status",
         },
       ],
-
+      contractTableHeader: [
+        {
+          id: variable.id,
+          value: "ID",
+        },
+      ],
+      contractForm: [],
+      contracts: {},
       tripType: {
         colNumber: 6,
         elementType: "select",
@@ -93,57 +116,111 @@ class UserProfile extends Component {
         },
         valid: {},
       },
-      tripTable: {
+      contractTable: {
         tableHeader: [
           {
-            id: "Destination",
-            label: "Destination",
-            minWidth: 300,
+            id: variable.id,
+            value: "ID",
           },
           {
-            id: "Date created",
-            label: "Date created",
-            minWidth: 100,
-          },
-          {
-            id: "status",
-            label: "status",
-            minWidth: 100,
+            id: variable.time,
+            value: "Date created",
           },
         ],
         tableBody: {
+          detail: "none",
           record: [
-            // {
-            //   id: "",
-            //   destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-            //   dateCreated: "25/08/2018",
-            //   status: "Ready",
-            // }
+            {
+              [variable.id]: 1,
+              [variable.startingLocation]: "Ahah",
+              [variable.destination]: "22 phuowfng 6",
+              [variable.ward]: "phường 55",
+              [variable.district]: "quận 12",
+              [variable.cargoVolume]: 8.5,
+              [variable.check]: false,
+              [variable.time]: new Date().toString(),
+            },
+            {
+              [variable.id]: 2,
+              [variable.startingLocation]: "Ahah",
+              [variable.destination]: "5 duong ngon lanh",
+              [variable.ward]: "phường 34",
+              [variable.district]: "quận 5",
+              [variable.cargoVolume]: 12.5,
+              [variable.check]: false,
+              [variable.time]: new Date().toString(),
+            },
+            {
+              [variable.id]: 3,
+              [variable.startingLocation]: "Ahah",
+              [variable.destination]: "44 duong so 2",
+              [variable.ward]: "phường 55",
+              [variable.district]: "quận 7",
+              [variable.cargoVolume]: 7.5,
+              [variable.check]: false,
+              [variable.time]: new Date().toString(),
+            },
+            {
+              [variable.id]: 4,
+              [variable.startingLocation]: "Hang tre",
+              [variable.destination]: "12353",
+              [variable.ward]: "phường 55 56",
+              [variable.district]: "quận Cu chi",
+              [variable.cargoVolume]: 20,
+              [variable.check]: false,
+              [variable.time]: new Date().toString(),
+            },
+            {
+              [variable.id]: 5,
+              [variable.startingLocation]: "Ahahfsdfa",
+              [variable.destination]: "Kinh duong vuong",
+              [variable.ward]: "phường 525",
+              [variable.district]: "quận 47",
+              [variable.cargoVolume]: 7.5,
+              [variable.check]: false,
+              [variable.time]: new Date().toString(),
+            },
+            {
+              [variable.id]: 6,
+              [variable.startingLocation]: "Luom oiw",
+              [variable.destination]: "Ha Noi",
+              [variable.ward]: "phường 345",
+              [variable.district]: "quận 3",
+              [variable.cargoVolume]: 7.5,
+              [variable.check]: false,
+              [variable.time]: new Date().toString(),
+            },
           ],
         },
       },
-      tripData: {
-        startingLocation: "",
-        destination: "",
-        tripType: "One way",
-        vehicleModel: "",
-        carManufacturer: "",
-        cityMpg: "",
-        highwayMpg: "",
-        tankSize: "",
-        fuelType: "Ron95-IV",
-        truck: {
-          id: "",
-          name: "",
-          licensePlatesL: "",
-          weight: "",
-          driver: {
-            id: "",
-            name: "",
-            phone: "",
-          },
+      tripTable: {
+        tableHeader: [],
+        tableBody: {
+          record: [],
         },
       },
+      // tripData: {
+      //   startingLocation: "",
+      //   destination: "",
+      //   tripType: "One way",
+      //   vehicleModel: "",
+      //   carManufacturer: "",
+      //   cityMpg: "",
+      //   highwayMpg: "",
+      //   tankSize: "",
+      //   fuelType: "Ron95-IV",
+      //   truck: {
+      //     id: "",
+      //     name: "",
+      //     licensePlatesL: "",
+      //     weight: "",
+      //     driver: {
+      //       id: "",
+      //       name: "",
+      //       phone: "",
+      //     },
+      //   },
+      // },
 
       formIsValid: false,
       username: "Samnk",
@@ -184,20 +261,6 @@ class UserProfile extends Component {
           },
         },
       ],
-      //state luu tru du lieu
-      // startingLocation: "",
-      // destination: "",
-      // tripType: "One way",
-      // vehicleModel: "",
-      // carManufacturer: "",
-      // cityMpg: "",
-      // highwayMpg: "",
-      // tankSize: "",
-      // fuelType: "Ron95-IV",
-      // driver: {
-      //   id: "",
-      //   name: "",
-      // },
       popupConten: {
         color: "green",
         message: "Nice",
@@ -288,74 +351,32 @@ class UserProfile extends Component {
 
   componentDidMount = () => {
     cookies.set(AcessToken, this.props.token, { path: "/" });
-    console.log("đã set cookie");
-    this.prepareValueForTripTable();
-    // this.prepareValueForTruckSelect();
+    this.setState({
+      contractForm:[...this.props.contractForm],
+      // contracts:{...this.props.contract}
+    })
   };
-  // componentDidUpdate=()=>{
-  //   this.prepareValueForTripTable()
-  // }
 
   prepareValueForTripTable = () => {
     let tmp = { ...this.state.tripTable };
-    let records = tmp.tableBody.record;
-    let col1 = {
-      id: "1",
-      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-      dateCreated: "25/08/2018",
-      status: "Ready",
-    };
-    let col2 = {
-      id: "2",
-      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-      dateCreated: "25/08/2018",
-      status: "Ready",
-    };
-    let col3 = {
-      id: "3",
-      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-      dateCreated: "25/08/2018",
-      status: "Ready",
-    };
-    let col4 = {
-      id: "4",
-      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-      dateCreated: "25/08/2018",
-      status: "Ready",
-    };
-    let col5 = {
-      id: "5",
-      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-      dateCreated: "25/08/2018",
-      status: "Ready",
-    };
-    let col6 = {
-      id: "6",
-      destination: "44 duong so 9 Ong Be Lap, p12, Q9",
-      dateCreated: "25/08/2018",
-      status: "Ready",
-    };
-    // let col1Extra = { ...col1, checked: false };
-    records.push({...col1,checked:false});
-    records.push({...col2,checked:false});
-    records.push({...col3,checked:false});
-    records.push({...col4,checked:false});
-    records.push({...col5,checked:false});
-    records.push({...col6,checked:false});
-    // tmp.tableBody.record.map((obj) => {
-    //   obj = { ...obj, checked: false };
-    // });
-
+    let records = [...this.props.tripRecord];
+    tmp.tableHeader = [];
+    this.props.tripRecord.map((item) => {
+      records.push({ ...item, checked: false });
+      for (let name in item) {
+        tmp.tableHeader.push({
+          id: name,
+          label: name,
+        });
+      }
+    });
+    tmp.tableBody.record = records;
     console.log(tmp);
     this.setState({
-      tripTable: {
-        ...tmp,
-        tableBody: {
-          record: [...records],
-        },
-      },
+      tripTable: { ...tmp },
     });
   };
+
   prepareValueForTruckSelect = () => {
     var values = {};
     const tmp = [...this.state.truckValue];
@@ -377,7 +398,7 @@ class UserProfile extends Component {
     let values = {};
     const truckValueTmp = [];
     const trucks = [];
-    var tripTmp = { ...this.state.tripForm };
+    var tripTmp = { ...this.props.contractForm };
     this.state.trucks.map((obj) => {
       if (weight == obj.weight) {
         values = { id: obj.id, value: obj.name + " - " + obj.driver.name };
@@ -408,158 +429,41 @@ class UserProfile extends Component {
     console.log("đây là title: " + this.state.myTitle);
   };
 
-  handle = (event) => {
-    let updatedFormElement = null;
+  handleInput = (event) => {
     let result = {};
     let formIsValid = true;
     let validation = new Validation();
-    var tmp = [...this.state.tripForm];
+    // var tmp = [...this.state.contractForm];
+    var tmp = [...this.props.contractForm];
     const { name, value } = event.target;
+    console.log(value);
     tmp.map((rows) => {
       rows.row.cols.map((col) => {
         //lấy từng column ra
-        // console.log(col.elementConfig.name);
-        if (name == col.elementConfig.name) {
-          // updatedFormElement = { ...col };
-
-          // validation từng column
-          if (name != "tripType") {
-            result = validation.getValidationState(value, col.validation);
-          } else {
-            result = { type: success, errorMessage: "" };
-          }
+        if (col.elementConfig.name == name) {
+          result = validation.getValidationState(value, col.validation);
 
           //gán lại giá trị
           col.elementConfig.value = value;
-          console.log(result);
+          console.log("result", result);
           col.valid = { ...result };
-          //cập nhật lại column
-          // col = updatedFormElement;
         }
       });
     });
 
     tmp.map((rows) => {
       rows.row.cols.map((col) => {
-        // console.log(
-        //   "valid: ",
-        //   validation.getValidationState(
-        //     value,
-        //     col.validation
-        //   )
-        // );
         formIsValid = col.valid.type == success && formIsValid;
       });
     });
 
     console.log(tmp);
     this.setState({
-      tripForm: [...tmp],
+      // contractForm: [...tmp],
       formIsValid: formIsValid,
     });
   };
-  // if (fieldName != "tripType") {
-  //   tmp[fieldName] = updatedFormElement;
-  //   for (let inputIdentifier in tmp) {
 
-  //     formIsValid = tmp[inputIdentifier].valid.type == success && formIsValid;
-  //   }
-  // } else {
-  //   tmp = updatedFormElement;
-  //   formIsValid = tmp.valid && formIsValid;
-  // }
-
-  // console.log(
-  //   "result= ",
-  //   result,
-  //   "field name= ",
-  //   fieldName,
-  //   "valid: ",
-  //   tmp.valid
-  // );
-
-  // }
-  // switch (fieldName) {
-  //   case "startingLocation":
-  //     this.setState({
-  //       trip: { ...tmp, startingLocation: event.target.value },
-  //     });
-  //     break;
-  //   case "destination":
-  //     this.setState({
-  //       trip: { ...tmp, destination: event.target.value },
-  //     });
-  //     break;
-  // case "vehicleModel":
-  //   this.setState({
-  //     trip: { ...tmp, vehicleModel: event.target.value },
-  //   });
-  //   break;
-  // case "carManufacturer":
-  //   this.setState({
-  //     trip: { ...tmp, carManufacturer: event.target.value },
-  //   });
-  //   break;
-  // case "cityMpg":
-  //   // ko còn dùng nữa
-  //   this.setState({
-  //     trip: { ...tmp, cityMpg: event.target.value },
-  //   });
-  //   break;
-  // case "highwayMpg":
-  //   // ko còn dùng nữa
-  //   this.setState({
-  //     trip: { ...tmp, highwayMpg: event.target.value },
-  //   });
-  //   break;
-  // case "tankSize":
-  //   // ko còn dùng nữa
-  //   this.setState({
-  //     trip: { ...tmp, tankSize: event.target.value },
-  //   });
-  //   break;
-  // case "tripType":
-  //   this.setState({
-  //     trip: { ...tmp, tripType: event.target.value },
-  //   });
-  //   break;
-  // case "fuelType":
-  //   // Ko còn dùng nữa
-  //   this.setState({
-  //     trip: { ...tmp, fuelType: event.target.value },
-  //   });
-  //   break;
-  // case "Weight":
-  //   //sau khi đa có weight thì tiến hành lựa xe dựa trên weight
-  //   this.updateSelectTruckItem(event.target.value);
-  //   break;
-  // case "truck":
-  //   console.log("Da vao rui và đây là truckID= " + event.target.value);
-  //   const selectId = event.target.value; //id lấy từ value của options trong select
-  //   this.state.trucks.map((obj) => {
-  //     //so sánh id người dùng chọn với id của mảng this.state.trucks
-  //     if (selectId == obj.id) {
-  //       tmp.truck = { ...obj };
-  //       console.log(obj);
-  //       this.setState({
-  //         trip: { ...tmp, truck: { ...obj } },
-  //       });
-  //     }
-  //   });
-
-  //   break;
-  // case "driver":
-  //   this.setState({
-  //     trip: {
-  //       ...tmp,
-  //       driver: {
-  //         name: event.target.value,
-  //       },
-  //     },
-  //   });
-  //   break;
-  //   }
-  // };
   /**
    * Sự khác nhau khi đối số có { } và ko
    * Nếu ko có thì nó chỉ là đối số bt
@@ -573,28 +477,61 @@ class UserProfile extends Component {
       checkboxChecked: !this.state.checkboxChecked,
     });
   };
+
   submitForm = (event) => {
     event.preventDefault();
-    const trip = { ...this.state.tripForm };
-    const tripType = { ...this.state.tripType };
-
-    const formData = {};
-    for (let formElementIdentifier in trip) {
-      {
-        console.log("đây là: ", trip[formElementIdentifier]);
-      }
-      formData[formElementIdentifier] =
-        trip[formElementIdentifier].elementConfig.value;
+    /**
+     * *Nếu như formIsValid == true thì tiến hành add trip
+     */
+    if (this.state.formIsValid == true) {
+      this.addNewTrip();
     }
-
-    formData["tripType"] = tripType.elementConfig.value;
-
-    // tmp.truck.id = 1;
-    console.log(formData);
-    this.props.getRoute(formData);
-    // this.props.history.replace("routetrip");
-    this.props.history.replace("route");
   };
+
+  addNewTrip() {
+    let trip = {};
+    this.props.contractForm.map((rows) => {
+      rows.row.cols.map((col) => {
+        let name = col.elementConfig.name;
+        trip = { ...trip, [name]: col.elementConfig.value };
+      });
+    });
+
+    /**
+     * ! tạm thời thì id sẽ tạo bằng cách này để test
+     */
+    trip = {
+      ...trip,
+      id: this.props.tripRecord.record.length + 1,
+      status: "ready",
+    };
+    this.props.addTrip(trip);
+    console.log("trip data= ", this.props.tripRecord);
+  }
+
+  /**
+   * * Add theem contract
+   * @param {*} event
+   */
+  addContract(event) {
+    event.preventDefault();
+    let contract = {};
+    // this.state.contractForm.map((rows) => {
+    this.props.contract.map((rows) => {
+      rows.row.cols.map((col) => {
+        let name = col.elementConfig.name;
+        contract = { ...contract, [name]: col.elementConfig.value };
+      });
+    });
+    console.log("contracs= ", this.props.contract.record.length);
+    contract = {
+      [variable.id]: this.props.contract.record.length + 1,
+      ...contract,
+      [variable.check]: false,
+      [variable.time]: new Date().toString(),
+    };
+    this.props.modifyContract(contract,ContractType.ADD_CONTRACT)
+  }
 
   /**
    * Mở popup lên
@@ -613,79 +550,85 @@ class UserProfile extends Component {
     });
   };
 
-  openModalPls = () => {
-    return (
-      <div className="static-modal">
-        <Modal.Dialog>
-          <Modal.Header>
-            <Modal.Title>Modal title</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>One fine body...</Modal.Body>
-
-          <Modal.Footer>
-            <Button>Close</Button>
-            <Button bsStyle="primary">Save changes</Button>
-          </Modal.Footer>
-        </Modal.Dialog>
-      </div>
-    );
-  };
   render() {
     const array = [];
-    // for (let key in this.state.tripForm) {
-    //   array.push({
-    //     content: this.state.tripForm[key],
-    //   });
-    // }
-    // let row = <Row></Row>;
+    const popUpHeight = 350;
+    console.log("contact=", this.state.contracts);
+    console.log("hi hi", this.props.contract);
     let col = <Col></Col>;
-    // console.log("mang= ", array);
     return (
       <div className="content">
         <ShowPopUp
           visible={this.state.visible}
           popupContent={this.state.popupConten}
           onCLose={this.closeModal}
+          length="80%"
         >
           <Grid fluid style={{ margin: 0, padding: 0 }}>
             <CardNoFooter
-              title="Trip form"
+              title="Contract form"
               content={
-                <Form onSubmit={this.submitForm}>
-                  {this.state.tripForm.map((obj, index) => {
-                    let columnss = obj.row.cols;
-                    return (
-                      <Row key={"row-" + index}>
-                        {columnss.map((col, index) => {
-                          col = (
-                            <Col xs={col.colNumber} key={"col-" + index}>
-                              <FormInput
-                                {...col}
-                                id={col.name}
-                                valid={col.valid}
-                                change={(event) => {
-                                  this.handle(event);
-                                }}
+                <Row>
+                  <Col xs={7} style={{ height: popUpHeight }}>
+                    <Form onSubmit={(event) => [this.addContract(event)]}>
+                      {this.props.contractForm.map((obj, index) => {
+                        let columnss = obj.row.cols;
+                        return (
+                          <Row key={"row-" + index}>
+                            {columnss.map((col, index) => {
+                              col = (
+                                <Col xs={col.colNumber} key={"col-" + index}>
+                                  <FormInput
+                                    {...col}
+                                    id={col.name}
+                                    valid={col.valid}
+                                    change={(event) => {
+                                      this.handleInput(event);
+                                    }}
+                                  />
+                                </Col>
+                              );
+                              return col;
+                            })}
+                          </Row>
+                        );
+                      })}
+                      <Row>
+                        <Col xs={6}>
+                          <div style={{ display: "flex" }}>
+                            <MyButton
+                              bsStyle="info"
+                              result={!this.state.formIsValid}
+                              type="submit"
+                              text="Add"
+                            />
+
+                            <div style={{ marginLeft: 15 }}>
+                              <MyButton
+                                bsStyle="danger"
+                                text="Close box"
+                                onClick={this.closeModal}
                               />
-                            </Col>
-                          );
-                          return col;
-                        })}
+                            </div>
+                          </div>
+                        </Col>
                       </Row>
-                    );
-                  })}
-                  <Row>
-                    <Col xs={12}>
-                      <MyButton
-                        bsStyle="info"
-                        disable={!this.state.formIsValid}
-                        type="submit"
-                        text="Find routes"
-                      />
-                    </Col>
-                  </Row>
-                </Form>
+                    </Form>
+                  </Col>
+                  <Col xs={5} style={{ height: popUpHeight }}>
+                    <CustomMaterialTable
+                      actionDisable={[variable.showDetail]}
+                      buttons={this.state.contractFormButton}
+                      {...this.state.contractTableHeader}
+                      filterList={this.state.contractFilterRequire}
+                      tableHeader={this.state.contractTable.tableHeader}
+                      tableBody={this.props.contract}
+                      // tableBody={this.state.contractTable.tableBody}
+                      detail={this.state.contractTable.tableBody.detail}
+                      addTrip={this.openModal}
+                    />
+                  </Col>
+                </Row>
               }
             />
           </Grid>
@@ -701,7 +644,13 @@ class UserProfile extends Component {
                       <Col md={12}>
                         <CustomMaterialTable
                           {...this.state.tripTable}
-                          tableBody={this.state.tripTable.tableBody}
+                          actionDisable={[]}
+                          buttons={this.state.tripTableButton}
+                          // buttonAddText="Add trip"
+                          filterList={this.state.tripFilterRequire}
+                          tableHeader={this.state.tableHeader}
+                          tableBody={this.props.tripRecord}
+                          addTrip={this.openModal}
                         />
                       </Col>
                     </Row>
@@ -910,18 +859,17 @@ class UserProfile extends Component {
 const mapStateToProps = (state) => {
   return {
     fullprofile: state.userprofile,
-    createtripss: state.trip,
+    tripRecord: state.trip.tripData.tableBody,
     token: state.user.token,
+    contract: state.contract.contracts,
+    contractForm: state.contract.contractForm,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    submitTheForm: (obj) =>
-      dispatch({
-        type: actionTypes.CREATETRIP,
-        values: obj,
-      }),
-  };
-};
-// export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
-export default connect(mapStateToProps, { getRoute, login })(UserProfile);
+export default connect(mapStateToProps, {
+  getRoute,
+  login,
+  addTrip,
+  addTripTableHeader,
+  modifyContract,
+  ModifyContractFomr
+})(UserProfile);

@@ -17,10 +17,12 @@
 */
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { routetriplink, isCheck,notification } from "../../variables/Variables.jsx";
+// import { routetriplink, isCheck,notification } from "../../variables/Variables.jsx";
+import * as variables from "../../variables/Variables.jsx";
 import AdminNavbarLinks from "../Navbars/AdminNavbarLinks.jsx";
 import "../Sidebar/Sidebar.css";
 import logo from "../../assets/img/gas_station_background.png";
+import { connect } from "react-redux";
 
 class Sidebar extends Component {
   constructor(props) {
@@ -40,16 +42,27 @@ class Sidebar extends Component {
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
   render() {
+    // const adminLink = [];
+    // const flettManagerLink = [];
+    const array = [];
+    const role = this.props.roles.text;
+    this.props.routes.map((prop) => {
+    console.log("layoutlayout= ",prop.layout,"và ",variables.fleetmanager)
+
+      if (role == variables.fleetManagerRole && prop.layout==variables.fleetmanager) {
+        array.push(prop);
+      } 
+      if(role == variables.adminRole && prop.layout==variables.admin) {
+        array.push(prop);
+      }
+    });
+    console.log("role= ",array)
+
     const sidebarBackground = {
       backgroundImage: "url(" + this.props.image + ")",
     };
     return (
-      <div
-        id="sidebar"
-        className="sidebar"
-        // color={this.props.color}
-        data-image={this.props.image}
-      >
+      <div id="sidebar" className="sidebar" data-image={this.props.image}>
         {this.props.hasImage ? (
           <div className="sidebar-background" style={sidebarBackground} />
         ) : null}
@@ -68,17 +81,22 @@ class Sidebar extends Component {
           <ul className="nav">
             {this.state.width <= 991 ? <AdminNavbarLinks /> : null}
             {/* cái dòng trên là resposive, nếu chiều ngang mà nhỏ hơn 991 thì cái side bar sẽ thu lại */}
-            {this.props.routes.map((prop, key) => {
+
+            {/* {this.props.routes.map((prop, key) => { */}
+            {array.map((prop, key) => {
               var li = <li></li>;
-              var imgSize="15%";
-              let link=prop.layout + prop.path
-              
+              var imgSize = "15%";
+              let link = prop.layout + prop.path;
 
               //Cái dòng trên có tác dụng để dấu đi những cái NavLink chỉ có thể
               // xuất hiện khi nhấp button "Find routes"
               // if (prop.layout + prop.path == routetriplink) | {
-              if (link == routetriplink|| link==notification) {
-              // if (link == routetriplink) {
+
+              if (
+                link == variables.routetriplink
+                //  ||
+                // link == variables.notification
+              ) {
                 li = <li display="none" />;
               } else {
                 if (!prop.redirect)
@@ -124,5 +142,10 @@ class Sidebar extends Component {
     );
   }
 }
-
-export default Sidebar;
+const mapStateToProps = (state) => {
+  return {
+    token: state.user.token,
+    roles: state.user.roles,
+  };
+};
+export default connect(mapStateToProps, null)(Sidebar);

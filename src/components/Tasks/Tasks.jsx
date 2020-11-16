@@ -17,7 +17,7 @@
 */
 import React, { Component } from "react";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import Checkbox from "../../components/CustomCheckbox/CustomCheckbox.jsx";
+import {CustomCheckbox} from "../../components/CustomCheckbox/CustomCheckbox.jsx";
 import Button from "../../components/CustomButton/CustomButton.jsx";
 
 export class Tasks extends Component {
@@ -46,7 +46,7 @@ export class Tasks extends Component {
       tasks.push(
         <tr key={i}>
           <td>
-            <Checkbox
+            <CustomCheckbox
               number={number}
               isChecked={i === 1 || i === 2 ? true : false}
             />

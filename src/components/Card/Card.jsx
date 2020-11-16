@@ -18,6 +18,7 @@
 import React, { Component } from "react";
 import {primaryColor} from "../../variables/Variables"
 const successBootrapColorScheme="#1DC7EA";
+const primaryBootrapColorScheme=primaryColor;
 
 export class Card extends Component {
   render() {
@@ -54,7 +55,7 @@ export class CardNoFooter extends Component {
 
   render() {
     return (
-      <div className={"card" + (this.props.plain ? " card-plain" : "")} style={{margin:15,border:"0.5px solid "+successBootrapColorScheme}}>
+      <div className={"card" + (this.props.plain ? " card-plain" : "")} style={{margin:15,border:"0.5px solid "+primaryColor}}>
         <div className={"header" + (this.props.hCenter ? " text-center" : "")}>
           <h4 className="title">{this.props.title}</h4>
           <p className="category">{this.props.category}</p>

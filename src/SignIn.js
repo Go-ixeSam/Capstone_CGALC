@@ -1,13 +1,8 @@
 import React from "react";
+import { connect } from "react-redux";
+import Cookies from "universal-cookie";
 import "./components/Login/Login.scss";
 import { login } from "./redux";
-import { connect } from "react-redux";
-import { loginAPI } from "./api/api";
-import URL from "./api/UrlConstans";
-import { projectAPIToken, baseUrl } from "./variables/Variables";
-import { instanceOf } from "prop-types";
-import Cookies from "universal-cookie";
-import { AcessToken } from "./variables/Variables";
 const cookies = new Cookies();
 const axios = require("axios").default; //Tạo 1 axios instance
 
@@ -61,12 +56,4 @@ const mapStatetoProp = (state) => {
     firebaseToken: state.user.firebaseToken,
   };
 };
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     doLogin: () => dispatch(login()),
-//   };
-// };
-// export default SignIn
 export default connect(mapStatetoProp, { login })(SignIn);
-// document.title="Login"

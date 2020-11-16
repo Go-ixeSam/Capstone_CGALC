@@ -1,17 +1,34 @@
-import { error, success,required,positiveNumber } from "../../variables/Variables.jsx";
+import {
+  error,
+  success,
+  required,
+  positiveNumber,
+  none,
+} from "../../variables/Variables.jsx";
 class Validation {
   getValidationState(value, validationType) {
-    console.log("loại biến= ",typeof value)
-    const length = value.length;
+    console.log("loại biến= ", typeof value);
+    // const length = value.length;
     let isValid = true;
     let result = { type: "", errorMessage: "" };
+
+    //Nếu độ dài của mảng validation bằng ko thì kết quả luôn là success
     validationType.map((obj) => {
       switch (obj) {
         case required:
-          isValid = value.trim() !== "" && isValid;
+          if (value.trim() == "") {
+            isValid = false;
+            result.errorMessage = "Please fill the box";
+          }
           break;
-          case positiveNumber:
-          
+        case positiveNumber:
+          if (value < "0") {
+            isValid = false;
+            result.errorMessage = "Cargo volume must be a possitive number";
+          }
+          break;
+        case none:
+          isValid=true;
           break
       }
     });
@@ -19,7 +36,6 @@ class Validation {
       result.type = success;
     } else {
       result.type = error;
-      result.errorMessage = "Please fill the box";
     }
     return result;
   }

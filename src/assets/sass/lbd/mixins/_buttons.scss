@@ -12,6 +12,11 @@
     color: white;
     border-color: $btn-color;
   }
+  &::after{
+    background-color: white;
+    color: $btn-color;
+    border-color: $btn-color;
+  }
   
   &.disabled,
   &:disabled,

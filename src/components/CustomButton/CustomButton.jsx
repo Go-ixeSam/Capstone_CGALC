@@ -52,21 +52,21 @@ CustomButton.propTypes = {
  */
 export const MyButton = (argument) => {
   let button = <Button></Button>;
-  if (argument.disable==true) {
-    button = (
-      <Button {...argument} disabled={true}>
-        {console.log(argument.layout + argument.path)}
-        {argument.text}
-      </Button>
-    );
-  } else {
-    button = (
-      <Button {...argument}>
-        {console.log(argument.layout + argument.path)}
-        {argument.text}
-      </Button>
-    );
-  }
+  // if (argument.disable==true) {
+  button = (
+    <Button {...argument} disabled={argument.result}>
+      {console.log(argument.layout + argument.path)}
+      {argument.text}
+    </Button>
+  );
+  // } else {
+  //   button = (
+  //     <Button {...argument}>
+  //       {console.log(argument.layout + argument.path)}
+  //       {argument.text}
+  //     </Button>
+  //   );
+  // }
   return button;
 };
 

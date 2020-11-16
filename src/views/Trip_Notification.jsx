@@ -10,6 +10,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { primaryColor } from "../variables/Variables";
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: primaryColor,
@@ -51,7 +52,6 @@ const useStyles = makeStyles({
 
 // class TripNotification extends React.Component
 const TripNotification = () => {
-  //   render() {
   const classes = useStyles();
   return (
     <div className="content">

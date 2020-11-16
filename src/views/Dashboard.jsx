@@ -18,6 +18,7 @@
 import React, { Component } from "react";
 import ChartistGraph from "react-chartist";
 import { Grid, Row, Col } from "react-bootstrap";
+import Iframe from "react-iframe";
 
 import { Card } from "../components/Card/Card.jsx";
 import { StatsCard } from "../components/StatsCard/StatsCard.jsx";
@@ -32,15 +33,15 @@ import {
   dataBar,
   optionsBar,
   responsiveBar,
-  legendBar
+  legendBar,
 } from "../variables/Variables.jsx";
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("../firebase-messaging-sw.js")
-    .then(function(registration) {
+    .then(function (registration) {
       console.log("Registration successful, scope is:", registration.scope);
     })
-    .catch(function(err) {
+    .catch(function (err) {
       console.log("Service worker registration failed, error:", err);
     });
 }
@@ -64,8 +65,30 @@ class Dashboard extends Component {
       console.log(invicile);
       return (
         <div className="content">
-          <Grid fluid>
+          {/* <Iframe
+            width="100%"
+            height="1000"
+            src="https://datastudio.google.com/embed/reporting/3a9d47b0-0067-48f9-83d2-ffa94eef6efa/page/uDaoB"
+            frameborder="0"
+            style="border:none"
+            allowfullscreen
+          /> */}
+          <div style={{ height: 500 }}>
+            <iframe
+              width="300"
+              height="300"
+              style={{ border: "none" }}
+              src="https://datastudio.google.com/embed/reporting/3a9d47b0-0067-48f9-83d2-ffa94eef6efa/page/uDaoB"
+              title="W3Schools Free Online Web Tutorials"
+            ></iframe>
+          </div>
+          {/* <Grid fluid>
             <Row>
+              <Col xs={12}></Col>
+            </Row>
+          </Grid> */}
+
+          {/* <Row>
               <Col lg={3} sm={6}>
                 <StatsCard
                   bigIcon={<i className="pe-7s-server text-warning" />}
@@ -169,9 +192,9 @@ class Dashboard extends Component {
                     <div className="legend">{this.createLegend(legendBar)}</div>
                   }
                 />
-              </Col>
+              </Col> */}
 
-              {/* <Col md={6}>
+          {/* <Col md={6}>
                 <Card
                   title="Tasks"
                   category="Backend development"
@@ -186,12 +209,10 @@ class Dashboard extends Component {
                   }
                 />
               </Col> */}
-            </Row>
-          </Grid>
+          {/* </Row> */}
         </div>
       );
     }
-
   }
 }
 

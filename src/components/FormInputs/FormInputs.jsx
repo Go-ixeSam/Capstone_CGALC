@@ -16,14 +16,14 @@
 
 */
 import React, { Component } from "react";
-import { FormGroup, ControlLabel , FormControl, Row } from "react-bootstrap";
-
+import { FormGroup, ControlLabel, FormControl, Row } from "react-bootstrap";
+import { connect, useDispatch, useSelector } from "react-redux";
+import variable from '../../variables/Variables'
 function FieldGroup({ label, ...props }) {
   return (
     <FormGroup>
       <ControlLabel>{label}</ControlLabel>
-      <FormControl {...props}>
-      </FormControl>
+      <FormControl {...props}></FormControl>
     </FormGroup>
   );
 }
@@ -41,5 +41,26 @@ export class FormInputs extends Component {
     return <Row>{row}</Row>;
   }
 }
+
+export function useFormResult(){
+  const contractForm = useSelector((state) => state.contract.contractForm);
+  // const dispatch = useDispatch();
+
+  let contract = React.useState({});
+  contractForm.map((rows) => {
+    rows.row.cols.map((col) => {
+      let name = col.elementConfig.name;
+      contract = { ...contract, [name]: col.elementConfig.value };
+    });
+  });
+  console.log("contracs= ", this.props.contract.record.length);
+  contract = {
+    [variable.id]: this.props.contract.record.length + 1,
+    ...contract,
+    [variable.check]: false,
+    [variable.time]: new Date().toString(),
+  };
+  return contract
+};
 
 export default FormInputs;

@@ -1,26 +1,10 @@
 import React from "react";
 import TripType from "./tripType.js";
 const initialState = {
-  trip: {
-    startingLocation: "",
-    destination: "",
-    tripType: "One way",
-    vehicleModel: "",
-    carManufacturer: "",
-    cityMpg: "",
-    highwayMpg: "",
-    tankSize: "",
-    fuelType: "Ron95-IV",
-    truck: {
-      id: "",
-      name: "",
-      licensePlatesL: "",
-      weight: "",
-      driver: {
-        id: "",
-        name: "",
-        phone: "",
-      },
+  tripData: {
+    tableHeader: [],
+    tableBody: {
+      record: [],
     },
   },
 };
@@ -32,6 +16,16 @@ const tripReducer = (state = initialState, action) => {
         ...state,
         trip: action.payload,
       };
+    /**
+     * * Bỏ lần lượt trừng trip từ API trả về vào store
+     */
+    case TripType.ADD_TRIP:
+      state.tripData.tableBody.record.push(action.payload);
+      return { ...state };
+    case TripType.ADD_TRIP_TABLE_HEADER:
+      state.tripData.tableHeader = [...action.payload];
+      return { ...state };
+      break;
     default:
       return state;
   }

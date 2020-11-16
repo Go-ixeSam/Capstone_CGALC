@@ -8,6 +8,8 @@ import URL from "../../api/UrlConstans";
  * @param {username,Password,deviceToken} 
  * với deviceToken là sử dụng firebaseToken
  */
+
+
 export const login = (username, pass, firebaseToken) => async (dispatch) => {
   const result = await loginAPI.post("http://localhost:44340" + URL.login, {
     Username: username,
@@ -16,7 +18,7 @@ export const login = (username, pass, firebaseToken) => async (dispatch) => {
   });
   return dispatch({
     type: UserType.LOGIN,
-    payload: result.data.token,
+    payload: result.data,
   });
 };
 export const logout = () => {

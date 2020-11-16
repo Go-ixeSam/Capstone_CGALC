@@ -5,14 +5,13 @@ import "./Popup.css"
 
 export const ShowPopUp = (argument) => {
   const length="200"
-  const width="700"
+  const width=argument.length
   return (
     <Modal
       visible={argument.visible}
       width={width}
-      // height={length}
       effect="fadeInDown"
-      onClickAway={argument.onCLose}
+      // onClickAway={argument.onCLose}
     >
       {argument.children}
     </Modal>

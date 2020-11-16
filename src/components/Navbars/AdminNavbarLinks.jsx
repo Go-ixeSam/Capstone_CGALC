@@ -45,13 +45,13 @@ class AdminNavbarLinks extends Component {
     // );
     return (
       <div>
-        <Nav>
+        {/* <Nav>
           <NavItem eventKey={1} onClick={this.goToNotificationtification}>
             <i className="pe-7s-bell" style={style.whenHover} />
             <span className="notification">7</span>
             <p className="hidden-lg hidden-md">Notification</p>
           </NavItem>
-        </Nav>
+        </Nav> */}
         {/* <NavItem eventKey={1} href="#">
             <i className="fa fa-dashboard" />
             <p className="hidden-lg hidden-md">Dashboard</p>
