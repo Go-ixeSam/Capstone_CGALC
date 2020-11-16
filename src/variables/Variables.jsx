@@ -295,10 +295,10 @@ const destination = "destination";
 const dateCreated = "datecreated";
 const cargoVolume = "cargoVolume";
 const startingLocation = "startingLocation";
-const starttingWard="startingWard";
-const starttingDistrict="startingDistrict";
-const destinationWard="destinationWard";
-const destinationDistrict="destinationDistrict";
+const starttingWard = "startingWard";
+const starttingDistrict = "startingDistrict";
+const destinationWard = "destinationWard";
+const destinationDistrict = "destinationDistrict";
 const name = "Name";
 const weight = "Weight";
 const status = "status";
@@ -338,14 +338,17 @@ const addContract = "Add Contract";
 const add = "Add";
 const deleteButton = "Delete";
 const arrangeGoods = "Arrange Goods";
-const updateButton="Update";
-const quan2="quan2";
-const quan1="quan1";
-const quan3="quan3";
-const phuong1="phuowng 1";
-const phuong2="phuowng 2";
-const phuong3="phuowng 3";
-const address="address";
+const updateButton = "Update";
+const quan2 = "quan2";
+const quan1 = "quan1";
+const quan3 = "quan3";
+const phuong1 = "phuowng 1";
+const phuong2 = "phuowng 2";
+const phuong3 = "phuowng 3";
+const address = "address";
+const location = "location";
+const trucks = "trucks";
+const contracts = "contracts";
 
 //Đây là nơi chứa dữ liệu giả của template
 const tdArray = [
@@ -771,7 +774,10 @@ module.exports = {
   address,
   phuong1,
   phuong2,
-  phuong3
+  phuong3,
+  location,
+  trucks,
+  contracts,
   //   const admin = "/admin";
   // const fleetmanager = "/fleetManager";
 };

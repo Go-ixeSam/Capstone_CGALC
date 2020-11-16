@@ -2,19 +2,20 @@ import React, { Component } from "react";
 import { Col, Form, Grid, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
-import { FormInput,useFormResult } from "../components/ByMySelf/Form.js";
+import { FormInput, useFormResult } from "../components/ByMySelf/Form.js";
 import Validation from "../components/ByMySelf/InputValidation";
 import { Card, CardNoFooter } from "../components/Card/Card.jsx";
 import { MyButton } from "../components/CustomButton/CustomButton";
 import CustomMaterialTable from "../components/CustomTable/CustomeMaterialTable";
 import { ShowPopUp } from "../components/Popup/Popup.js";
+import VerticalTabs from '../components/CustomTable/CustomTableDetail'
 import {
   addTrip,
   addTripTableHeader,
   getRoute,
   login,
   modifyContract,
-  ModifyContractFomr
+  ModifyContractFomr,
 } from "../redux";
 import ContractType from "../redux/contract/contractType.js";
 import * as variable from "../variables/Variables";
@@ -37,7 +38,7 @@ class UserProfile extends Component {
           height: variable.buttonHeight,
           borderRadius: variable.borderRadius,
           padding: variable.buttonPadding,
-          marginRight:5
+          marginRight: 5,
         },
         buttons: [
           {
@@ -52,12 +53,12 @@ class UserProfile extends Component {
               text: variable.addContract,
             },
           },
-          {
-            config: {
-              bsStyle: "danger",
-              text: variable.deleteButton,
-            },
-          },
+          // {
+          //   config: {
+          //     bsStyle: "danger",
+          //     text: variable.deleteButton,
+          //   },
+          // },
         ],
       },
       contractFormButton: {
@@ -65,7 +66,7 @@ class UserProfile extends Component {
           height: variable.buttonHeight,
           borderRadius: variable.borderRadius,
           padding: variable.buttonPadding,
-          marginRight:5
+          marginRight: 5,
         },
         buttons: [
           {
@@ -86,6 +87,10 @@ class UserProfile extends Component {
       contractFilterRequire: [],
       tripFilterRequire: [variable.searchFilter, variable.timeFilter],
       tableHeader: [
+        {
+          id: variable.id,
+          value: "ID",
+        },
         {
           id: variable.destination,
           value: "Destination",
@@ -199,28 +204,6 @@ class UserProfile extends Component {
           record: [],
         },
       },
-      // tripData: {
-      //   startingLocation: "",
-      //   destination: "",
-      //   tripType: "One way",
-      //   vehicleModel: "",
-      //   carManufacturer: "",
-      //   cityMpg: "",
-      //   highwayMpg: "",
-      //   tankSize: "",
-      //   fuelType: "Ron95-IV",
-      //   truck: {
-      //     id: "",
-      //     name: "",
-      //     licensePlatesL: "",
-      //     weight: "",
-      //     driver: {
-      //       id: "",
-      //       name: "",
-      //       phone: "",
-      //     },
-      //   },
-      // },
 
       formIsValid: false,
       username: "Samnk",
@@ -352,9 +335,9 @@ class UserProfile extends Component {
   componentDidMount = () => {
     cookies.set(AcessToken, this.props.token, { path: "/" });
     this.setState({
-      contractForm:[...this.props.contractForm],
+      contractForm: [...this.props.contractForm],
       // contracts:{...this.props.contract}
-    })
+    });
   };
 
   prepareValueForTripTable = () => {
@@ -530,7 +513,7 @@ class UserProfile extends Component {
       [variable.check]: false,
       [variable.time]: new Date().toString(),
     };
-    this.props.modifyContract(contract,ContractType.ADD_CONTRACT)
+    this.props.modifyContract(contract, ContractType.ADD_CONTRACT);
   }
 
   /**
@@ -635,7 +618,7 @@ class UserProfile extends Component {
         </ShowPopUp>
         <Grid fluid>
           <Row>
-            <Col md={12}>
+            <Col md={6}>
               <Card
                 title="Trip information"
                 content={
@@ -644,15 +627,18 @@ class UserProfile extends Component {
                       <Col md={12}>
                         <CustomMaterialTable
                           {...this.state.tripTable}
-                          actionDisable={[]}
+                          actionDisable={[
+                            variable.showDetail,
+                            variable.showSelect,
+                          ]}
                           buttons={this.state.tripTableButton}
-                          // buttonAddText="Add trip"
                           filterList={this.state.tripFilterRequire}
                           tableHeader={this.state.tableHeader}
                           tableBody={this.props.tripRecord}
                           addTrip={this.openModal}
                         />
                       </Col>
+
                     </Row>
                     {/* <Row>
                       <Col xs={12}>
@@ -807,15 +793,26 @@ class UserProfile extends Component {
               />
             </Col>
             {/* Hiện tại thì tài xế sẽ đi chung với xe tải luôn */}
-            <Col
+            <Col md={6}>
+<Card 
+title="Trip Detail"
+content={
+  <div>
+    <VerticalTabs/>
+  </div>
+}
+/>
+            </Col>
+            {/* <Col
               md={2}
               style={{
                 background: "#fff",
                 border: "#333333",
                 display: "none",
               }}
-            >
-              {/* <Row>
+            ></Col> */}
+
+            {/* <Row>
                   <div style={{ marginTop: 15, marginLeft: 15 }}>
                     <h4>Driver</h4>
                   </div>
@@ -848,8 +845,7 @@ class UserProfile extends Component {
                   </div>
                 </Row> */}
 
-              {/* cos gif hot */}
-            </Col>
+            {/* cos gif hot */}
           </Row>
         </Grid>
       </div>
@@ -871,5 +867,5 @@ export default connect(mapStateToProps, {
   addTrip,
   addTripTableHeader,
   modifyContract,
-  ModifyContractFomr
+  ModifyContractFomr,
 })(UserProfile);

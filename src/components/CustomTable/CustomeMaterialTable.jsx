@@ -174,9 +174,36 @@ const RowNoExpand = (props) => {
 function Row(props) {
   const { row, columns } = props;
   const [open, setOpen] = React.useState(false);
-
+  const acList = props.actionList;
   const array = []; // mảng sẽ chứa từng phần tử của row
   let cells = [];
+
+  let showDetail = (
+    <StyledTableCell>
+      <IconButton
+        aria-label="expand row"
+        size="small"
+        onClick={() => setOpen(!open)}
+      >
+        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+      </IconButton>
+    </StyledTableCell>
+  );
+  let showSelect = (
+    <StyledTableCell>
+      <StyledCheckbox check={row.checked} onChange={props.action} />
+    </StyledTableCell>
+  );
+  acList.map((show) => {
+    switch (show) {
+      case variable.showDetail:
+        showDetail = <StyledTableCell style={{display:"none"}}></StyledTableCell>;
+        break;
+      case variable.showSelect:
+        showSelect = <StyledTableCell style={{display:"none"}}></StyledTableCell>;
+        break;
+    }
+  });
 
   //loop an object
   for (let key in row) {
@@ -193,7 +220,7 @@ function Row(props) {
    */
   {
     array.map((arr) => {
-      console.log("arr=", arr);
+      // console.log("arr=", arr);
       columns.map((header) => {
         if (header.id == arr.key) {
           // console.log("header= ", header);
@@ -206,18 +233,8 @@ function Row(props) {
   return (
     <React.Fragment>
       <StyledTableRow hover={true}>
-        <StyledTableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </StyledTableCell>
-        <StyledTableCell>
-          <StyledCheckbox check={row.checked} onChange={props.action} />
-        </StyledTableCell>
+        {showDetail}
+        {showSelect}
         {cells.map((cell, index) => {
           return (
             <StyledTableCell key={"contentCell" + index}>
@@ -296,12 +313,14 @@ const CustomMaterialTable = (argument) => {
   const filterRequired = argument.filterList;
   let filterItems = [];
   let filterItem = <div></div>;
-
   /**
    * !Dành cho những table ko cần show detail ở ngay trong bảng
    */
   let showDetail = <StyledTableCell></StyledTableCell>;
   let select = <StyledTableCell>Select</StyledTableCell>;
+  // let detailButton = <StyledTableCell></StyledTableCell>;
+  // let selectButton = <StyledTableCell></StyledTableCell>;
+
   argument.actionDisable.map((show) => {
     switch (show) {
       case variable.showDetail:
@@ -437,14 +456,9 @@ const CustomMaterialTable = (argument) => {
       }
     }
 
-    // rows.map((row) => {
-    //   console.log(row.id, " vaf tmp= ", tmp[variable.id]);
-      
-    // });
     const index = rows.indexOf(rowClicked);
-    rows[index]={...tmp}
+    rows[index] = { ...tmp };
     setRows(rows);
-    console.log(tmp, rows);
     dispatch(modifyContract(rows, ContractType.UPDATE_CONTRACT));
   }
 
@@ -479,6 +493,7 @@ const CustomMaterialTable = (argument) => {
                     return (
                       <Row
                         row={row}
+                        actionList={argument.actionDisable}
                         action={(event) => {
                           handleRow(row.id);
                         }}
